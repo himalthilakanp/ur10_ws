@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<robot name="ur10e_cylinder">
+
+  <!-- ================= BASE ================= -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.18" radius="0.095"/>
+      </geometry>
+      <origin xyz="0 0 0.09"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.18" radius="0.095"/>
+      </geometry>
+      <origin xyz="0 0 0.09"/>
+    </collision>
+  </link>
+
+  <!-- ================= JOINT 1 ================= -->
+  <joint name="shoulder_pan_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="link1"/>
+    <origin xyz="0 0 0.127" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="1.0" lower="-6.28" upper="6.28"/>
+  </joint>
+
+  <link name="link1">
+    <visual>
+      <geometry>
+        <cylinder length="0.15" radius="0.06"/>
+      </geometry>
+      <origin xyz="0 0 0.075"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.15" radius="0.06"/>
+      </geometry>
+      <origin xyz="0 0 0.075"/>
+    </collision>
+  </link>
+
+  <!-- ================= JOINT 2 ================= -->
+  <joint name="shoulder_lift_joint" type="revolute">
+    <parent link="link1"/>
+    <child link="link2"/>
+    <origin xyz="0 0 0.15" rpy="0 1.5708 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="100" velocity="1.0" lower="-3.14" upper="3.14"/>
+  </joint>
+
+  <!-- Upper Arm -->
+  <link name="link2">
+    <visual>
+      <geometry>
+        <cylinder length="0.612" radius="0.05"/>
+      </geometry>
+      <origin xyz="0 0 0.306"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.612" radius="0.05"/>
+      </geometry>
+      <origin xyz="0 0 0.306"/>
+    </collision>
+  </link>
+
+  <!-- ================= JOINT 3 ================= -->
+  <joint name="elbow_joint" type="revolute">
+    <parent link="link2"/>
+    <child link="link3"/>
+    <origin xyz="0 0 0.612" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="100" velocity="1.0" lower="-3.14" upper="3.14"/>
+  </joint>
+
+  <!-- Forearm -->
+  <link name="link3">
+    <visual>
+      <geometry>
+        <cylinder length="0.572" radius="0.045"/>
+      </geometry>
+      <origin xyz="0 0 0.286"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.572" radius="0.045"/>
+      </geometry>
+      <origin xyz="0 0 0.286"/>
+    </collision>
+  </link>
+
+  <!-- ================= JOINT 4 ================= -->
+  <joint name="wrist_1_joint" type="revolute">
+    <parent link="link3"/>
+    <child link="link4"/>
+    <origin xyz="0 0 0.572" rpy="0 1.5708 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="50" velocity="1.0" lower="-6.28" upper="6.28"/>
+  </joint>
+
+  <link name="link4">
+    <visual>
+      <geometry>
+        <cylinder length="0.163" radius="0.04"/>
+      </geometry>
+      <origin xyz="0 0 0.0815"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.163" radius="0.04"/>
+      </geometry>
+      <origin xyz="0 0 0.0815"/>
+    </collision>
+  </link>
+
+  <!-- ================= JOINT 5 ================= -->
+  <joint name="wrist_2_joint" type="revolute">
+    <parent link="link4"/>
+    <child link="link5"/>
+    <origin xyz="0 0 0.163" rpy="0 -1.5708 0"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="50" velocity="1.0" lower="-6.28" upper="6.28"/>
+  </joint>
+
+  <link name="link5">
+    <visual>
+      <geometry>
+        <cylinder length="0.115" radius="0.035"/>
+      </geometry>
+      <origin xyz="0 0 0.0575"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.115" radius="0.035"/>
+      </geometry>
+      <origin xyz="0 0 0.0575"/>
+    </collision>
+  </link>
+
+  <!-- ================= JOINT 6 ================= -->
+  <joint name="wrist_3_joint" type="revolute">
+    <parent link="link5"/>
+    <child link="tool0"/>
+    <origin xyz="0 0 0.115" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="50" velocity="1.0" lower="-6.28" upper="6.28"/>
+  </joint>
+
+  <!-- End Effector -->
+  <link name="tool0">
+    <visual>
+      <geometry>
+        <box size="0.02 0.02 0.1"/>
+      </geometry>
+      <origin xyz="0 0 0.05"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <box size="0.02 0.02 0.1"/>
+      </geometry>
+      <origin xyz="0 0 0.05"/>
+    </collision>
+  </link>
+
+</robot>
