@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'ur10e_cylinder'
+package_name = 'link4_controller'
 
 setup(
     name=package_name,
@@ -10,13 +10,11 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        ('share/' + package_name + '/urdf', ['urdf/ur10e_cylinder.urdf']),
-        ('share/ur10e_cylinder/launch', ['launch/move_to_pose.launch.py']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='tony',
-    maintainer_email='tony@todo.todo',
+    maintainer_email='himalthilakanp96@gmail.com',
     description='TODO: Package description',
     license='TODO: License declaration',
     extras_require={
@@ -25,7 +23,7 @@ setup(
         ],
     },
     entry_points={
-        'console_scripts': ['move_to_pose = ur10e_cylinder.move_to_pose:main',
+        'console_scripts': ['vertical_controller = link4_controller.vertical_controller:main',
         ],
     },
 )

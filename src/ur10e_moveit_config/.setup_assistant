@@ -5,6 +5,21 @@ moveit_setup_assistant_config:
   srdf:
     relative_path: config/ur10e_cylinder.srdf
   package_settings:
-    author_name: ""
-    author_email: ""
-    generated_timestamp: 1776429643
+    author_name: todo
+    author_email: todo@todo.com
+    generated_timestamp: 1776835872
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
+  modified_urdf:
+    xacros:
+      - control_xacro
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity

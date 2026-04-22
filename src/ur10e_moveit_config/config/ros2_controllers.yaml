@@ -1,9 +1,11 @@
+# This config file is used by ros2_control
 controller_manager:
   ros__parameters:
-    update_rate: 100
+    update_rate: 100  # Hz
 
     arm_controller:
       type: joint_trajectory_controller/JointTrajectoryController
+
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
@@ -23,10 +25,3 @@ arm_controller:
       - position
       - velocity
     allow_nonzero_velocity_at_trajectory_end: true
-    constraints:
-      stopped_velocity_tolerance: 0.05
-      goal_time: 10.0
-
-joint_state_broadcaster:
-  ros__parameters:
-    publish_rate: 50.0

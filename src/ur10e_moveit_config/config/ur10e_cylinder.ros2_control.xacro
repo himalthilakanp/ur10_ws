@@ -7,8 +7,6 @@
             <hardware>
                 <!-- By default, set up controllers for simulation. This won't work on real hardware -->
                 <plugin>mock_components/GenericSystem</plugin>
-                <param name="fake_sensor_commands">false</param>
-                <param name="state_following_offset">0.0</param>
             </hardware>
             <joint name="shoulder_pan_joint">
                 <command_interface name="position"/>
