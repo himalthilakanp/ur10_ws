@@ -1,8 +1,22 @@
 <robot name="ur10e_cylinder">
 
+  <!-- ================= WORLD ================= -->
+  <link name="world"/>
+
+  <!-- Rotate robot so it faces the viewer correctly -->
+  <joint name="world_to_base" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 4.71239"/>
+  </joint>
+
   <!-- ================= MATERIAL ================= -->
   <material name="grey">
     <color rgba="0.5 0.5 0.5 1.0"/>
+  </material>
+
+  <material name="green">
+    <color rgba="0.1 0.8 0.1 1.0"/>
   </material>
 
   <!-- ================= BASE ================= -->
@@ -51,9 +65,9 @@
   <joint name="shoulder_lift_joint" type="revolute">
     <parent link="link1"/>
     <child link="link2"/>
-    <origin xyz="0 0 0.15" rpy="0 0 0"/>
+    <origin xyz="0 0 0.15" rpy="0 1.5708 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="100" velocity="1.0" lower="0" upper="2.5"/>
+    <limit effort="100" velocity="1.0" lower="-3.14" upper="3.14"/>
   </joint>
 
   <link name="link2">
@@ -78,7 +92,7 @@
     <child link="link3"/>
     <origin xyz="0 0 0.612" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="100" velocity="1.0" lower="0" upper="2.5"/>
+    <limit effort="100" velocity="1.0" lower="-2.224" upper="2.224"/>
   </joint>
 
   <link name="link3">
@@ -103,7 +117,7 @@
     <child link="link4"/>
     <origin xyz="0 0 0.572" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="50" velocity="1.0" lower="-3.14" upper="3.14"/>
+    <limit effort="50" velocity="1.0" lower="-2.224" upper="2.224"/>
   </joint>
 
   <link name="link4">
@@ -172,5 +186,29 @@
       <origin xyz="0 0 0.05"/>
     </collision>
   </link>
+
+  <!-- ================= OBSTACLE CYLINDER ================= -->
+  <link name="obstacle_cylinder">
+    <visual>
+      <geometry>
+        <cylinder length="0.7" radius="0.3"/>
+      </geometry>
+      <origin xyz="0 0 0"/>
+      <material name="green"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <cylinder length="0.7" radius="0.3"/>
+      </geometry>
+      <origin xyz="0 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="world_to_obstacle" type="fixed">
+    <parent link="world"/>
+    <child link="obstacle_cylinder"/>
+    <origin xyz="0.45 -0.3 0.35" rpy="0 0 0"/>
+  </joint>
 
 </robot>

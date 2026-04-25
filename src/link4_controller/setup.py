@@ -24,6 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': ['vertical_controller = link4_controller.vertical_controller:main',
+        'ee_position = link4_controller.ee_position:main',
         ],
     },
 )
