@@ -76,33 +76,33 @@ class MovePoints(Node):
 
         # ================= POINT 1 =================
         p1 = [
-            ("shoulder_pan_joint",   0.370),
-            ("shoulder_lift_joint", -1.579),
-            ("elbow_joint",          1.719),
-            ("wrist_1_joint",        1.454),
-            ("wrist_2_joint",       -1.570),
+            ("shoulder_pan_joint",   0.000),
+            ("shoulder_lift_joint", -2.087),
+            ("elbow_joint",          2.008),
+            ("wrist_1_joint",        1.681),
+            ("wrist_2_joint",        0.000),
             ("wrist_3_joint",        0.000),
         ]
 
         # ================= POINT 2 =================
         # ADD YOUR VALUES HERE
         p2 = [
-            ("shoulder_pan_joint",   0.000),
-            ("shoulder_lift_joint", -2.121),
-            ("elbow_joint",          2.080),
-            ("wrist_1_joint",        1.406),
-            ("wrist_2_joint",       -1.570),
+            ("shoulder_pan_joint",   1.816),
+            ("shoulder_lift_joint", -1.679),
+            ("elbow_joint",          1.623),
+            ("wrist_1_joint",        1.579),
+            ("wrist_2_joint",       -2.766),
             ("wrist_3_joint",        0.000),
         ]
 
         # ================= POINT 3 =================
         # ADD YOUR VALUES HERE
         p3 = [
-            ("shoulder_pan_joint",   1.850),
-            ("shoulder_lift_joint", -1.884),
-            ("elbow_joint",          2.008),
-            ("wrist_1_joint",        1.382),
-            ("wrist_2_joint",        1.570),
+            ("shoulder_pan_joint",   0.357),
+            ("shoulder_lift_joint", -1.103),
+            ("elbow_joint",          1.070),
+            ("wrist_1_joint",        1.647),
+            ("wrist_2_joint",        -0.899),
             ("wrist_3_joint",        0.000),
         ]
 
@@ -118,10 +118,10 @@ class MovePoints(Node):
 
         # ===== EXECUTION ORDER =====
         sequence = [
-            ("P2", p2),
-            ("P3", p3),
+            ("P1", p1),
             ("P2", p2),
             ("P1", p1),
+            ("P3", p3),
             ("HOME", home),
         ]
 

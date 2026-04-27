@@ -18,6 +18,10 @@
   <material name="green">
     <color rgba="0.1 0.8 0.1 1.0"/>
   </material>
+  
+  <material name="yellow">
+    <color rgba="1.0 0.9 0.1 1.0"/>
+  </material>
 
   <!-- ================= BASE ================= -->
   <link name="base_link">
@@ -73,16 +77,16 @@
   <link name="link2">
     <visual>
       <geometry>
-        <cylinder length="0.612" radius="0.05"/>
+        <cylinder length="0.613" radius="0.05"/>
       </geometry>
-      <origin xyz="0 0 0.306"/>
+      <origin xyz="0 0 0.3065"/>
       <material name="grey"/>
     </visual>
     <collision>
       <geometry>
-        <cylinder length="0.612" radius="0.05"/>
+        <cylinder length="0.613" radius="0.05"/>
       </geometry>
-      <origin xyz="0 0 0.306"/>
+      <origin xyz="0 0 0.3065"/>
     </collision>
   </link>
 
@@ -90,7 +94,7 @@
   <joint name="elbow_joint" type="revolute">
     <parent link="link2"/>
     <child link="link3"/>
-    <origin xyz="0 0 0.612" rpy="0 0 0"/>
+    <origin xyz="0 0 0.613" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
     <limit effort="100" velocity="1.0" lower="-2.224" upper="2.224"/>
   </joint>
@@ -98,16 +102,16 @@
   <link name="link3">
     <visual>
       <geometry>
-        <cylinder length="0.572" radius="0.045"/>
+        <cylinder length="0.571" radius="0.045"/>
       </geometry>
-      <origin xyz="0 0 0.286"/>
+      <origin xyz="0 0 0.2855"/>
       <material name="grey"/>
     </visual>
     <collision>
       <geometry>
-        <cylinder length="0.572" radius="0.045"/>
+        <cylinder length="0.571" radius="0.045"/>
       </geometry>
-      <origin xyz="0 0 0.286"/>
+      <origin xyz="0 0 0.2855"/>
     </collision>
   </link>
 
@@ -115,7 +119,7 @@
 <joint name="wrist_1_joint" type="revolute">
   <parent link="link3"/>
   <child link="link4"/>
-  <origin xyz="0 0 0.572" rpy="0 0 0"/>
+  <origin xyz="0 0 0.571" rpy="0 0 0"/>
   <axis xyz="0 1 0"/>
   <limit effort="50" velocity="1.0" lower="-3.14" upper="3.14"/>
 </joint>
@@ -123,17 +127,17 @@
 <link name="link4">
   <visual>
     <geometry>
-      <cylinder length="0.163" radius="0.04"/>
+      <cylinder length="0.174" radius="0.04"/>
     </geometry>
-    <origin xyz="0 0 0.0815"/>
+    <origin xyz="0 0 0.087"/>
     <material name="grey"/>
   </visual>
 
   <collision>
     <geometry>
-      <cylinder length="0.163" radius="0.04"/>
+      <cylinder length="0.74" radius="0.04"/>
     </geometry>
-    <origin xyz="0 0 0.0815"/>
+    <origin xyz="0 0 0.087"/>
   </collision>
 </link>
 
@@ -144,7 +148,7 @@
   <child link="link5"/>
 
   <!-- connect at top of link4 -->
-  <origin xyz="0 0 0.163" rpy="0 0 0"/>
+  <origin xyz="0 0 0.174" rpy="0 0 0"/>
 
   <!-- rotate around local Z like UR robots -->
   <axis xyz="0 0 1"/>
@@ -155,19 +159,19 @@
 <link name="link5">
   <visual>
     <geometry>
-      <cylinder length="0.115" radius="0.035"/>
+      <cylinder length="0.120" radius="0.035"/>
     </geometry>
 
     <!-- make cylinder horizontal -->
-    <origin xyz="0 0.0575 0" rpy="1.5708 0 0"/>
+    <origin xyz="0 0.06 0" rpy="1.5708 0 0"/>
     <material name="grey"/>
   </visual>
 
   <collision>
     <geometry>
-      <cylinder length="0.115" radius="0.035"/>
+      <cylinder length="0.120" radius="0.035"/>
     </geometry>
-    <origin xyz="0 0.0575 0" rpy="1.5708 0 0"/>
+    <origin xyz="0 0.06 0" rpy="1.5708 0 0"/>
   </collision>
 </link>
 
@@ -178,7 +182,7 @@
   <child link="tool0"/>
 
   <!-- end of horizontal wrist -->
-  <origin xyz="0 0.115 0" rpy="0 0 0"/>
+  <origin xyz="0 0.120 0" rpy="0 0 0"/>
 
   <!-- UR style final wrist axis -->
   <axis xyz="0 1 0"/>
@@ -190,11 +194,11 @@
 <link name="tool0">
   <visual>
     <geometry>
-      <box size="0.1 0.02 0.02"/>
+      <box size="0.08 0.02 0.02"/>
     </geometry>
 
     <!-- same position, now horizontal -->
-    <origin xyz="0 0.05 0" rpy="0 0 1.5708"/>
+    <origin xyz="0 0.04 0" rpy="0 0 1.5708"/>
     <material name="grey"/>
   </visual>
 
@@ -206,28 +210,175 @@
   </collision>
 </link>
 
-  <!-- ================= OBSTACLE CYLINDER ================= -->
-  <link name="obstacle_cylinder">
-    <visual>
-      <geometry>
-        <cylinder length="0.7" radius="0.3"/>
-      </geometry>
-      <origin xyz="0 0 0"/>
-      <material name="green"/>
-    </visual>
+  <!-- ================= OBSTACLE CYLINDER (1.6 m total height, 8 stacked pieces) ================= -->
 
-    <collision>
-      <geometry>
-        <cylinder length="0.7" radius="0.3"/>
-      </geometry>
-      <origin xyz="0 0 0"/>
-    </collision>
-  </link>
+<!-- piece height = 1.6 / 8 = 0.2 -->
 
-  <joint name="world_to_obstacle" type="fixed">
-    <parent link="world"/>
-    <child link="obstacle_cylinder"/>
-    <origin xyz="0.45 -0.3 0.35" rpy="0 0 0"/>
-  </joint>
+<!-- Piece 1 -->
+<link name="obstacle_1">
+  <visual>
+    <geometry>
+      <cylinder length="0.2" radius="0.3"/>
+    </geometry>
+    <material name="green"/>
+  </visual>
+  <collision>
+    <geometry>
+      <cylinder length="0.2" radius="0.3"/>
+    </geometry>
+  </collision>
+</link>
 
+<joint name="world_to_obstacle_1" type="fixed">
+  <parent link="world"/>
+  <child link="obstacle_1"/>
+  <origin xyz="0.45 -0.3 0.1" rpy="0 0 0"/>
+</joint>
+
+<!-- Piece 2 -->
+<link name="obstacle_2">
+  <visual>
+    <geometry>
+      <cylinder length="0.2" radius="0.3"/>
+    </geometry>
+    <material name="yellow"/>
+  </visual>
+  <collision>
+    <geometry>
+      <cylinder length="0.2" radius="0.3"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="world_to_obstacle_2" type="fixed">
+  <parent link="world"/>
+  <child link="obstacle_2"/>
+  <origin xyz="0.45 -0.3 0.3" rpy="0 0 0"/>
+</joint>
+
+<!-- Piece 3 -->
+<link name="obstacle_3">
+  <visual>
+    <geometry>
+      <cylinder length="0.2" radius="0.3"/>
+    </geometry>
+    <material name="green"/>
+  </visual>
+  <collision>
+    <geometry>
+      <cylinder length="0.2" radius="0.3"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="world_to_obstacle_3" type="fixed">
+  <parent link="world"/>
+  <child link="obstacle_3"/>
+  <origin xyz="0.45 -0.3 0.5" rpy="0 0 0"/>
+</joint>
+
+<!-- Piece 4 -->
+<link name="obstacle_4">
+  <visual>
+    <geometry>
+      <cylinder length="0.2" radius="0.3"/>
+    </geometry>
+    <material name="yellow"/>
+  </visual>
+  <collision>
+    <geometry>
+      <cylinder length="0.2" radius="0.3"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="world_to_obstacle_4" type="fixed">
+  <parent link="world"/>
+  <child link="obstacle_4"/>
+  <origin xyz="0.45 -0.3 0.7" rpy="0 0 0"/>
+</joint>
+
+<!-- Piece 5 -->
+<link name="obstacle_5">
+  <visual>
+    <geometry>
+      <cylinder length="0.2" radius="0.3"/>
+    </geometry>
+    <material name="green"/>
+  </visual>
+  <collision>
+    <geometry>
+      <cylinder length="0.2" radius="0.3"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="world_to_obstacle_5" type="fixed">
+  <parent link="world"/>
+  <child link="obstacle_5"/>
+  <origin xyz="0.45 -0.3 0.9" rpy="0 0 0"/>
+</joint>
+
+<!-- Piece 6 -->
+<link name="obstacle_6">
+  <visual>
+    <geometry>
+      <cylinder length="0.2" radius="0.3"/>
+    </geometry>
+    <material name="yellow"/>
+  </visual>
+  <collision>
+    <geometry>
+      <cylinder length="0.2" radius="0.3"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="world_to_obstacle_6" type="fixed">
+  <parent link="world"/>
+  <child link="obstacle_6"/>
+  <origin xyz="0.45 -0.3 1.1" rpy="0 0 0"/>
+</joint>
+
+<!-- Piece 7 -->
+<link name="obstacle_7">
+  <visual>
+    <geometry>
+      <cylinder length="0.2" radius="0.3"/>
+    </geometry>
+    <material name="green"/>
+  </visual>
+  <collision>
+    <geometry>
+      <cylinder length="0.2" radius="0.3"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="world_to_obstacle_7" type="fixed">
+  <parent link="world"/>
+  <child link="obstacle_7"/>
+  <origin xyz="0.45 -0.3 1.3" rpy="0 0 0"/>
+</joint>
+
+<!-- Piece 8 -->
+<link name="obstacle_8">
+  <visual>
+    <geometry>
+      <cylinder length="0.2" radius="0.3"/>
+    </geometry>
+    <material name="yellow"/>
+  </visual>
+  <collision>
+    <geometry>
+      <cylinder length="0.2" radius="0.3"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="world_to_obstacle_8" type="fixed">
+  <parent link="world"/>
+  <child link="obstacle_8"/>
+  <origin xyz="0.45 -0.3 1.5" rpy="0 0 0"/>
+</joint>
 </robot>
