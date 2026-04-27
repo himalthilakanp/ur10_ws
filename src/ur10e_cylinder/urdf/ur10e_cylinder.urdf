@@ -112,80 +112,99 @@
   </link>
 
   <!-- ================= JOINT 4 ================= -->
-  <joint name="wrist_1_joint" type="revolute">
-    <parent link="link3"/>
-    <child link="link4"/>
-    <origin xyz="0 0 0.572" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
-    <limit effort="50" velocity="1.0" lower="-2.224" upper="2.224"/>
-  </joint>
+<joint name="wrist_1_joint" type="revolute">
+  <parent link="link3"/>
+  <child link="link4"/>
+  <origin xyz="0 0 0.572" rpy="0 0 0"/>
+  <axis xyz="0 1 0"/>
+  <limit effort="50" velocity="1.0" lower="-3.14" upper="3.14"/>
+</joint>
 
-  <link name="link4">
-    <visual>
-      <geometry>
-        <cylinder length="0.163" radius="0.04"/>
-      </geometry>
-      <origin xyz="0 0 0.0815"/>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry>
-        <cylinder length="0.163" radius="0.04"/>
-      </geometry>
-      <origin xyz="0 0 0.0815"/>
-    </collision>
-  </link>
+<link name="link4">
+  <visual>
+    <geometry>
+      <cylinder length="0.163" radius="0.04"/>
+    </geometry>
+    <origin xyz="0 0 0.0815"/>
+    <material name="grey"/>
+  </visual>
 
-  <!-- ================= JOINT 5 ================= -->
-  <joint name="wrist_2_joint" type="revolute">
-    <parent link="link4"/>
-    <child link="link5"/>
-    <origin xyz="0 0 0.163" rpy="0 0 0"/>
-    <axis xyz="1 0 0"/>
-    <limit effort="50" velocity="1.0" lower="-1.57" upper="1.57"/>
-  </joint>
+  <collision>
+    <geometry>
+      <cylinder length="0.163" radius="0.04"/>
+    </geometry>
+    <origin xyz="0 0 0.0815"/>
+  </collision>
+</link>
 
-  <link name="link5">
-    <visual>
-      <geometry>
-        <cylinder length="0.115" radius="0.035"/>
-      </geometry>
-      <origin xyz="0 0 0.0575"/>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry>
-        <cylinder length="0.115" radius="0.035"/>
-      </geometry>
-      <origin xyz="0 0 0.0575"/>
-    </collision>
-  </link>
 
-  <!-- ================= JOINT 6 ================= -->
-  <joint name="wrist_3_joint" type="revolute">
-    <parent link="link5"/>
-    <child link="tool0"/>
-    <origin xyz="0 0 0.115" rpy="0 0 0"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="50" velocity="1.0" lower="-3.14" upper="3.14"/>
-  </joint>
+<!-- ================= JOINT 5 (Horizontal Wrist) ================= -->
+<joint name="wrist_2_joint" type="revolute">
+  <parent link="link4"/>
+  <child link="link5"/>
 
-  <!-- ================= END EFFECTOR ================= -->
-  <link name="tool0">
-    <visual>
-      <geometry>
-        <box size="0.02 0.02 0.1"/>
-      </geometry>
-      <origin xyz="0 0 0.05"/>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry>
-        <box size="0.02 0.02 0.1"/>
-      </geometry>
-      <origin xyz="0 0 0.05"/>
-    </collision>
-  </link>
+  <!-- connect at top of link4 -->
+  <origin xyz="0 0 0.163" rpy="0 0 0"/>
+
+  <!-- rotate around local Z like UR robots -->
+  <axis xyz="0 0 1"/>
+
+  <limit effort="50" velocity="1.0" lower="-3.14" upper="3.14"/>
+</joint>
+
+<link name="link5">
+  <visual>
+    <geometry>
+      <cylinder length="0.115" radius="0.035"/>
+    </geometry>
+
+    <!-- make cylinder horizontal -->
+    <origin xyz="0 0.0575 0" rpy="1.5708 0 0"/>
+    <material name="grey"/>
+  </visual>
+
+  <collision>
+    <geometry>
+      <cylinder length="0.115" radius="0.035"/>
+    </geometry>
+    <origin xyz="0 0.0575 0" rpy="1.5708 0 0"/>
+  </collision>
+</link>
+
+
+<!-- ================= JOINT 6 ================= -->
+<joint name="wrist_3_joint" type="revolute">
+  <parent link="link5"/>
+  <child link="tool0"/>
+
+  <!-- end of horizontal wrist -->
+  <origin xyz="0 0.115 0" rpy="0 0 0"/>
+
+  <!-- UR style final wrist axis -->
+  <axis xyz="0 1 0"/>
+
+  <limit effort="50" velocity="1.0" lower="-3.14" upper="3.14"/>
+</joint>
+
+<!-- ================= END EFFECTOR ================= -->
+<link name="tool0">
+  <visual>
+    <geometry>
+      <box size="0.1 0.02 0.02"/>
+    </geometry>
+
+    <!-- same position, now horizontal -->
+    <origin xyz="0 0.05 0" rpy="0 0 1.5708"/>
+    <material name="grey"/>
+  </visual>
+
+  <collision>
+    <geometry>
+      <box size="0.1 0.02 0.02"/>
+    </geometry>
+    <origin xyz="0 0.05 0" rpy="0 0 1.5708"/>
+  </collision>
+</link>
 
   <!-- ================= OBSTACLE CYLINDER ================= -->
   <link name="obstacle_cylinder">
