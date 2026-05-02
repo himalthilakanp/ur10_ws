@@ -18,6 +18,7 @@
         <joint name="wrist_1_joint"/>
         <joint name="wrist_2_joint"/>
         <joint name="wrist_3_joint"/>
+        <joint name="wrist_camera_joint"/>
         <joint name="world_to_obstacle_1"/>
         <joint name="world_to_obstacle_2"/>
         <joint name="world_to_obstacle_3"/>
@@ -36,20 +37,11 @@
         <joint name="wrist_2_joint" value="0"/>
         <joint name="wrist_3_joint" value="0"/>
     </group_state>
-    <group_state name="pose_1" group="arm">
-        <joint name="elbow_joint" value="0.8724"/>
-        <joint name="shoulder_lift_joint" value="0.0867"/>
-        <joint name="shoulder_pan_joint" value="0"/>
-        <joint name="wrist_1_joint" value="0.7807"/>
-        <joint name="wrist_2_joint" value="0"/>
-        <joint name="wrist_3_joint" value="0"/>
-    </group_state>
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="virtual_joint" type="fixed" parent_frame="world" child_link="world"/>
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="base_link" link2="link1" reason="Adjacent"/>
-    <disable_collisions link1="base_link" link2="link3" reason="Never"/>
-    <disable_collisions link1="base_link" link2="link5" reason="Never"/>
+    <disable_collisions link1="base_link" link2="link2" reason="Never"/>
     <disable_collisions link1="base_link" link2="obstacle_1" reason="Adjacent"/>
     <disable_collisions link1="base_link" link2="obstacle_2" reason="Adjacent"/>
     <disable_collisions link1="base_link" link2="obstacle_3" reason="Adjacent"/>
@@ -58,9 +50,10 @@
     <disable_collisions link1="base_link" link2="obstacle_6" reason="Adjacent"/>
     <disable_collisions link1="base_link" link2="obstacle_7" reason="Adjacent"/>
     <disable_collisions link1="base_link" link2="obstacle_8" reason="Adjacent"/>
+    <disable_collisions link1="camera_link" link2="link4" reason="Adjacent"/>
+    <disable_collisions link1="camera_link" link2="link5" reason="Never"/>
+    <disable_collisions link1="camera_link" link2="tool0" reason="Never"/>
     <disable_collisions link1="link1" link2="link2" reason="Adjacent"/>
-    <disable_collisions link1="link1" link2="link3" reason="Never"/>
-    <disable_collisions link1="link1" link2="link5" reason="Never"/>
     <disable_collisions link1="link1" link2="obstacle_1" reason="Never"/>
     <disable_collisions link1="link1" link2="obstacle_2" reason="Never"/>
     <disable_collisions link1="link1" link2="obstacle_3" reason="Never"/>
@@ -69,13 +62,9 @@
     <disable_collisions link1="link1" link2="obstacle_6" reason="Never"/>
     <disable_collisions link1="link1" link2="obstacle_7" reason="Never"/>
     <disable_collisions link1="link1" link2="obstacle_8" reason="Never"/>
-    <disable_collisions link1="link1" link2="tool0" reason="Never"/>
     <disable_collisions link1="link2" link2="link3" reason="Adjacent"/>
-    <disable_collisions link1="link2" link2="link5" reason="Never"/>
-    <disable_collisions link1="link2" link2="obstacle_6" reason="Never"/>
-    <disable_collisions link1="link2" link2="obstacle_7" reason="Never"/>
+    <disable_collisions link1="link2" link2="obstacle_1" reason="Never"/>
     <disable_collisions link1="link2" link2="obstacle_8" reason="Never"/>
-    <disable_collisions link1="link2" link2="tool0" reason="Never"/>
     <disable_collisions link1="link3" link2="link4" reason="Adjacent"/>
     <disable_collisions link1="link4" link2="link5" reason="Adjacent"/>
     <disable_collisions link1="link4" link2="tool0" reason="Never"/>

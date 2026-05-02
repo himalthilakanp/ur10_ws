@@ -83,33 +83,33 @@ class MovePoints(Node):
 
         # ================= POINT 1 =================
         p1 = [
-            ("shoulder_pan_joint",   0.000),
-            ("shoulder_lift_joint",  0.166),
-            ("elbow_joint",          2.128),
-            ("wrist_1_joint",       -0.739),
-            ("wrist_2_joint",        0.164),
+            ("shoulder_pan_joint",   0.245),
+            ("shoulder_lift_joint",  -0.053),
+            ("elbow_joint",          1.780),
+            ("wrist_1_joint",       -0.158),
+            ("wrist_2_joint",        -0.320),
             ("wrist_3_joint",        0.000),
         ]
         # ================= POINT 2 =================
         p2 = [
-            ("shoulder_pan_joint",   1.868),
-            ("shoulder_lift_joint", -0.047),
-            ("elbow_joint",          1.836),
-            ("wrist_1_joint",       -2.900),
-            ("wrist_2_joint",       -2.842),
+            ("shoulder_pan_joint",   0.117),
+            ("shoulder_lift_joint",  0.030),
+            ("elbow_joint",          2.036),
+            ("wrist_1_joint",       -0.505),
+            ("wrist_2_joint",        0.000),
             ("wrist_3_joint",        0.000),
         ]
         # ================= POINT 3 =================
         p3 = [
-            ("shoulder_pan_joint",   0.093),
-            ("shoulder_lift_joint", -0.044),
-            ("elbow_joint",          1.836),
-            ("wrist_1_joint",       -0.222),
-            ("wrist_2_joint",       -0.085),
+            ("shoulder_pan_joint",   1.350),
+            ("shoulder_lift_joint", -0.094),
+            ("elbow_joint",          1.908),
+            ("wrist_1_joint",       -0.237),
+            ("wrist_2_joint",       -3.239),
             ("wrist_3_joint",        0.000),
         ]
         # ================= POINT 4 =================
-        p4 = [
+        '''p4 = [
             ("shoulder_pan_joint",   0.264),
             ("shoulder_lift_joint", -0.472),
             ("elbow_joint",          1.744),
@@ -135,6 +135,15 @@ class MovePoints(Node):
             ("wrist_2_joint",       -2.802),
             ("wrist_3_joint",        0.000),
         ]
+        # ================= POINT 7 =================
+        p7 = [
+            ("shoulder_pan_joint",   0.305),
+            ("shoulder_lift_joint", -0.530),
+            ("elbow_joint",          1.360),
+            ("wrist_1_joint",        0.737),
+            ("wrist_2_joint",       -0.865),
+            ("wrist_3_joint",        0.000),
+        ]'''
         # ================= HOME =================
         home = [
             ("shoulder_pan_joint",   0.0),
@@ -146,13 +155,10 @@ class MovePoints(Node):
         ]
         # ================= SEQUENCE =================
         sequence = [
-            ("P1",   p1),
+            ("P2",   p2),
+            ("P3",   p3),
             ("P2",   p2),
             ("P1",   p1),
-            ("P3",   p3),
-            ("P4",   p4),
-            ("P5",   p5),
-            ("P6",   p6),
             ("HOME", home),
         ]
 
