@@ -204,101 +204,16 @@
   <link name="tool0">
     <visual>
       <geometry>
-        <box size="0.08 0.02 0.02"/>
+        <box size="0.04 0.02 0.02"/>
       </geometry>
-      <origin xyz="0 0.04 0" rpy="0 0 1.5708"/>
+      <origin xyz="0 0 0" rpy="0 0 1.5708"/>
       <material name="grey"/>
     </visual>
     <collision>
       <geometry>
-        <box size="0.1 0.02 0.02"/>
+        <box size="0.04 0.02 0.02"/>
       </geometry>
-      <origin xyz="0 0.05 0" rpy="0 0 1.5708"/>
+      <origin xyz="0 0 0" rpy="0 0 1.5708"/>
     </collision>
   </link>
-
-    <!-- ================= OBSTACLE CYLINDER STACK ================= -->
-
-  <!-- Piece height = 0.2 (total 1.6m) -->
-
-  <!-- Piece 1 -->
-  <link name="obstacle_1">
-    <visual><geometry><cylinder length="0.2" radius="0.15"/></geometry><material name="green"/></visual>
-    <collision><geometry><cylinder length="0.2" radius="0.15"/></geometry></collision>
-  </link>
-  <joint name="world_to_obstacle_1" type="fixed">
-    <parent link="world"/><child link="obstacle_1"/>
-    <origin xyz="0.45 -0.3 0.1"/>
-  </joint>
-
-  <!-- Piece 2 -->
-  <link name="obstacle_2">
-    <visual><geometry><cylinder length="0.2" radius="0.15"/></geometry><material name="yellow"/></visual>
-    <collision><geometry><cylinder length="0.2" radius="0.15"/></geometry></collision>
-  </link>
-  <joint name="world_to_obstacle_2" type="fixed">
-    <parent link="world"/><child link="obstacle_2"/>
-    <origin xyz="0.45 -0.3 0.3"/>
-  </joint>
-
-  <!-- Piece 3 -->
-  <link name="obstacle_3">
-    <visual><geometry><cylinder length="0.2" radius="0.15"/></geometry><material name="green"/></visual>
-    <collision><geometry><cylinder length="0.2" radius="0.15"/></geometry></collision>
-  </link>
-  <joint name="world_to_obstacle_3" type="fixed">
-    <parent link="world"/><child link="obstacle_3"/>
-    <origin xyz="0.45 -0.3 0.5"/>
-  </joint>
-
-  <!-- Piece 4 -->
-  <link name="obstacle_4">
-    <visual><geometry><cylinder length="0.2" radius="0.15"/></geometry><material name="yellow"/></visual>
-    <collision><geometry><cylinder length="0.2" radius="0.15"/></geometry></collision>
-  </link>
-  <joint name="world_to_obstacle_4" type="fixed">
-    <parent link="world"/><child link="obstacle_4"/>
-    <origin xyz="0.45 -0.3 0.7"/>
-  </joint>
-
-  <!-- Piece 5 -->
-  <link name="obstacle_5">
-    <visual><geometry><cylinder length="0.2" radius="0.15"/></geometry><material name="green"/></visual>
-    <collision><geometry><cylinder length="0.2" radius="0.15"/></geometry></collision>
-  </link>
-  <joint name="world_to_obstacle_5" type="fixed">
-    <parent link="world"/><child link="obstacle_5"/>
-    <origin xyz="0.45 -0.3 0.9"/>
-  </joint>
-
-  <!-- Piece 6 -->
-  <link name="obstacle_6">
-    <visual><geometry><cylinder length="0.2" radius="0.15"/></geometry><material name="yellow"/></visual>
-    <collision><geometry><cylinder length="0.2" radius="0.15"/></geometry></collision>
-  </link>
-  <joint name="world_to_obstacle_6" type="fixed">
-    <parent link="world"/><child link="obstacle_6"/>
-    <origin xyz="0.45 -0.3 1.1"/>
-  </joint>
-
-  <!-- Piece 7 -->
-  <link name="obstacle_7">
-    <visual><geometry><cylinder length="0.2" radius="0.15"/></geometry><material name="green"/></visual>
-    <collision><geometry><cylinder length="0.2" radius="0.15"/></geometry></collision>
-  </link>
-  <joint name="world_to_obstacle_7" type="fixed">
-    <parent link="world"/><child link="obstacle_7"/>
-    <origin xyz="0.45 -0.3 1.3"/>
-  </joint>
-
-  <!-- Piece 8 -->
-  <link name="obstacle_8">
-    <visual><geometry><cylinder length="0.2" radius="0.15"/></geometry><material name="yellow"/></visual>
-    <collision><geometry><cylinder length="0.2" radius="0.15"/></geometry></collision>
-  </link>
-  <joint name="world_to_obstacle_8" type="fixed">
-    <parent link="world"/><child link="obstacle_8"/>
-    <origin xyz="0.45 -0.3 1.5"/>
-  </joint>
-
 </robot>

@@ -5,180 +5,152 @@ import time
 from rclpy.node import Node
 from rclpy.action import ActionClient
 
-from control_msgs.action import FollowJointTrajectory
-from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
-from builtin_interfaces.msg import Duration
+from moveit_msgs.action import MoveGroup
+from moveit_msgs.msg import Constraints, JointConstraint
+from moveit_msgs.msg import CollisionObject, PlanningScene
+from shape_msgs.msg import SolidPrimitive
+from geometry_msgs.msg import PoseStamped
 
 
-class MovePoints(Node):
+class MoveWithMoveIt(Node):
 
     def __init__(self):
-        super().__init__("move_points")
+        super().__init__("move_with_moveit")
 
-        self.joint_names = [
+        self.client = ActionClient(self, MoveGroup, 'move_action')
+
+        self.get_logger().info("Waiting for MoveIt...")
+        self.client.wait_for_server()
+
+        self.get_logger().info("MoveIt ready ✔")
+
+        self.add_cylinder()
+
+    # -------------------------
+    # ADD OBSTACLE
+    # -------------------------
+    def add_cylinder(self):
+
+        pub = self.create_publisher(PlanningScene, '/planning_scene', 10)
+
+        scene = PlanningScene()
+        scene.is_diff = True
+
+        collision = CollisionObject()
+        collision.id = "obstacle"
+        collision.header.frame_id = "world"
+
+        primitive = SolidPrimitive()
+        primitive.type = SolidPrimitive.CYLINDER
+        primitive.dimensions = [1.6, 0.15]  # height, radius
+
+        pose = PoseStamped()
+        pose.header.frame_id = "world"
+        pose.pose.position.x = 0.45
+        pose.pose.position.y = -0.3
+        pose.pose.position.z = 0.8
+        pose.pose.orientation.w = 1.0
+
+        collision.primitives.append(primitive)
+        collision.primitive_poses.append(pose.pose)
+        collision.operation = CollisionObject.ADD
+
+        scene.world.collision_objects.append(collision)
+
+        pub.publish(scene)
+
+        self.get_logger().info("Cylinder added ✔")
+        time.sleep(2)
+
+    # -------------------------
+    # MOVE TO JOINTS
+    # -------------------------
+    def move_to_joints(self, joints, name="POINT"):
+
+        goal = MoveGroup.Goal()
+        goal.request.group_name = "arm"
+
+        joint_names = [
             "shoulder_pan_joint",
             "shoulder_lift_joint",
             "elbow_joint",
             "wrist_1_joint",
             "wrist_2_joint",
-            "wrist_3_joint",
+            "wrist_3_joint"
         ]
 
-        self.client = ActionClient(
-            self,
-            FollowJointTrajectory,
-            "/arm_controller/follow_joint_trajectory"
-        )
+        constraints = Constraints()
 
-        self.get_logger().info("Waiting for controller server...")
-        self.client.wait_for_server()
-        self.get_logger().info("Connected")
+        for i in range(len(joints)):
+            jc = JointConstraint()
+            jc.joint_name = joint_names[i]
 
-    def move_to_joints(self, joint_values, name="POINT", duration_sec=4):
+            # 🔥 FIX: force float conversion (this fixes your crash)
+            jc.position = float(joints[i])
+            jc.tolerance_above = float(0.01)
+            jc.tolerance_below = float(0.01)
+            jc.weight = float(1.0)
 
-        goal = FollowJointTrajectory.Goal()
+            constraints.joint_constraints.append(jc)
 
-        traj = JointTrajectory()
-        traj.joint_names = self.joint_names
+        goal.request.goal_constraints.append(constraints)
 
-        point = JointTrajectoryPoint()
-        point.positions = joint_values          # exact positions, no tolerance
-        point.velocities = [0.0] * 6           # stop at the point
-        point.time_from_start = Duration(sec=duration_sec)
+        self.get_logger().info(f"Planning {name}...")
 
-        traj.points.append(point)
-        goal.trajectory = traj
+        # -------------------------
+        # ACTION CALL (SAFE)
+        # -------------------------
+        send_future = self.client.send_goal_async(goal)
+        rclpy.spin_until_future_complete(self, send_future)
 
-        # Tight goal tolerance — controller enforces this, not OMPL
-        from control_msgs.msg import JointTolerance
-        for jname in self.joint_names:
-            tol = JointTolerance()
-            tol.name = jname
-            tol.position = 0.001               # 0.001 rad = exact
-            goal.goal_tolerance.append(tol)
+        goal_handle = send_future.result()
 
-        goal.goal_time_tolerance = Duration(sec=2)
-
-        self.get_logger().info(f"Moving to {name} ...")
-        future = self.client.send_goal_async(goal)
-        rclpy.spin_until_future_complete(self, future)
-
-        handle = future.result()
-        if handle is None or not handle.accepted:
+        if not goal_handle.accepted:
             self.get_logger().error(f"{name} rejected ❌")
-            return False
+            return
 
-        result_future = handle.get_result_async()
+        result_future = goal_handle.get_result_async()
         rclpy.spin_until_future_complete(self, result_future)
 
-        result = result_future.result().result
-        if result.error_code == FollowJointTrajectory.Result.SUCCESSFUL:
-            self.get_logger().info(f"{name} reached ✔")
-            return True
-        else:
-            self.get_logger().error(f"{name} failed ❌ code {result.error_code}")
-            return False
+        self.get_logger().info(f"{name} done ✔")
 
+        # small safety delay to avoid controller overlap
+        time.sleep(1)
+
+    # -------------------------
+    # SEQUENCE
+    # -------------------------
     def run(self):
 
-        # ================= POINT 1 =================
-        p1 = [
-            ("shoulder_pan_joint",   0.245),
-            ("shoulder_lift_joint",  -0.053),
-            ("elbow_joint",          1.780),
-            ("wrist_1_joint",       -0.158),
-            ("wrist_2_joint",        -0.320),
-            ("wrist_3_joint",        0.000),
-        ]
-        # ================= POINT 2 =================
-        p2 = [
-            ("shoulder_pan_joint",   0.117),
-            ("shoulder_lift_joint",  0.030),
-            ("elbow_joint",          2.036),
-            ("wrist_1_joint",       -0.505),
-            ("wrist_2_joint",        0.000),
-            ("wrist_3_joint",        0.000),
-        ]
-        # ================= POINT 3 =================
-        p3 = [
-            ("shoulder_pan_joint",   1.350),
-            ("shoulder_lift_joint", -0.094),
-            ("elbow_joint",          1.908),
-            ("wrist_1_joint",       -0.237),
-            ("wrist_2_joint",       -3.239),
-            ("wrist_3_joint",        0.000),
-        ]
-        # ================= POINT 4 =================
-        '''p4 = [
-            ("shoulder_pan_joint",   0.264),
-            ("shoulder_lift_joint", -0.472),
-            ("elbow_joint",          1.744),
-            ("wrist_1_joint",        0.088),
-            ("wrist_2_joint",       -0.474),
-            ("wrist_3_joint",        0.000),
-        ]
-        # ================= POINT 5 =================
-        p5 = [
-            ("shoulder_pan_joint",   0.000),
-            ("shoulder_lift_joint", -0.443),
-            ("elbow_joint",          2.224),
-            ("wrist_1_joint",       -0.215),
-            ("wrist_2_joint",       -0.275),
-            ("wrist_3_joint",        0.000),
-        ]
-        # ================= POINT 6 =================
-        p6 = [
-            ("shoulder_pan_joint",   1.863),
-            ("shoulder_lift_joint", -0.407),
-            ("elbow_joint",          2.067),
-            ("wrist_1_joint",       -0.136),
-            ("wrist_2_joint",       -2.802),
-            ("wrist_3_joint",        0.000),
-        ]
-        # ================= POINT 7 =================
-        p7 = [
-            ("shoulder_pan_joint",   0.305),
-            ("shoulder_lift_joint", -0.530),
-            ("elbow_joint",          1.360),
-            ("wrist_1_joint",        0.737),
-            ("wrist_2_joint",       -0.865),
-            ("wrist_3_joint",        0.000),
-        ]'''
-        # ================= HOME =================
-        home = [
-            ("shoulder_pan_joint",   0.0),
-            ("shoulder_lift_joint",  0.0),
-            ("elbow_joint",          0.0),
-            ("wrist_1_joint",        0.0),
-            ("wrist_2_joint",        0.0),
-            ("wrist_3_joint",        0.0),
-        ]
-        # ================= SEQUENCE =================
+        p1 = [0.245, -0.053, 1.780, -0.158, -0.320, 0.0]
+        p2 = [0.117, 0.030, 2.036, -0.505, 0.0, 0.0]
+        p3 = [1.350, -0.094, 1.908, -0.237, -3.239, 0.0]
+        home = [0, 0, 0, 0, 0, 0]
+
         sequence = [
-            ("P2",   p2),
-            ("P3",   p3),
-            ("P2",   p2),
-            ("P1",   p1),
+            ("P2", p2),
+            ("P3", p3),
+            ("P2", p2),
+            ("P1", p1),
             ("HOME", home),
         ]
 
         for name, joints in sequence:
-            ok = self.move_to_joints([v for _, v in joints], name, duration_sec=4)
-            if not ok:
-                self.get_logger().error("Sequence stopped.")
-                return
-            time.sleep(1)
+            self.move_to_joints(joints, name)
 
         self.get_logger().info("DONE ✔")
 
 
 def main(args=None):
     rclpy.init(args=args)
-    node = MovePoints()
+    node = MoveWithMoveIt()
+
     node.run()
+
     node.destroy_node()
     rclpy.shutdown()
 
 
 if __name__ == "__main__":
     main()
+
