@@ -15,14 +15,14 @@ def generate_launch_description():
                 "launch",
                 "demo.launch.py"
             )
-        )
+        ),
+        launch_arguments={
+            "planning_plugin": "pilz_industrial_motion_planner/CommandPlanner"
+        }.items(),
     )
 
-    # ── THIS WAS MISSING ──────────────────────────────────────────
-    # Spawns arm_controller and joint_state_broadcaster so the
-    # /arm_controller/follow_joint_trajectory action server comes up.
     spawn_controllers = TimerAction(
-        period=5.0,   # wait for controller_manager to be ready
+        period=5.0,
         actions=[
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
@@ -35,10 +35,9 @@ def generate_launch_description():
             )
         ]
     )
-    # ─────────────────────────────────────────────────────────────
 
     move_script = TimerAction(
-        period=12.0,   # wait for demo + controllers to be fully ready
+        period=12.0,
         actions=[
             Node(
                 package="ur10e_cylinder",
@@ -50,6 +49,6 @@ def generate_launch_description():
 
     return LaunchDescription([
         moveit_demo,
-        spawn_controllers,   # added
+        spawn_controllers,
         move_script,
     ])
