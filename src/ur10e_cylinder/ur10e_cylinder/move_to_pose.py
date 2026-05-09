@@ -31,8 +31,17 @@ class MoveWithMoveIt(Node):
 
         self.get_logger().info("MoveIt ready ✔")
 
+        # Planning scene publisher
+        self.scene_pub = self.create_publisher(
+        PlanningScene,
+        '/planning_scene',
+        10
+        )
+
         # Add obstacle
         self.add_cylinder()
+
+        self.add_leaf()
 
     # -------------------------------------------------
     # ADD CYLINDER OBSTACLE
@@ -79,6 +88,60 @@ class MoveWithMoveIt(Node):
         self.get_logger().info("Cylinder added ✔")
 
         time.sleep(2)
+
+    #----------------------------------------------------
+    # ADD leaf
+    #----------------------------------------------------
+    def add_leaf(self):
+
+        scene = PlanningScene()
+
+        scene.is_diff = True
+
+        leaf = CollisionObject()
+
+        leaf.id = "leaf"
+
+        leaf.header.frame_id = "world"
+
+    #--------------------------------------------------
+    #LEAF SHAPE
+    #--------------------------------------------------
+        primitive = SolidPrimitive()
+
+        primitive.type = SolidPrimitive.BOX
+
+    # dimensions [x, y, z]
+        primitive.dimensions = [0.12, 0.03, 0.01]
+
+        pose = PoseStamped()
+
+        pose.header.frame_id = "world"
+
+    #----------------------------------------------------
+    #LEAF POSITION
+    #NEAR CYLINDER I P! DIRECTION
+    #-----------------------------------------------------
+        pose.pose.position.x = 0.37
+        pose.pose.position.y = -0.3
+        pose.pose.position.z = 0.2
+
+        pose.pose.orientation.w = 1.0
+
+        leaf.primitives.append(primitive)
+
+        leaf.primitive_poses.append(pose.pose)
+
+        leaf.operation = CollisionObject.ADD
+
+        scene.world.collision_objects.append(leaf)
+
+        self.scene_pub.publish(scene)
+
+        self.get_logger().info("LEAF added")
+
+        time.sleep(1)
+
 
     # -------------------------------------------------
     # MOVE TO JOINT POSITION
@@ -235,6 +298,9 @@ class MoveWithMoveIt(Node):
         # SAFE waypoint to avoid collision
         safe = [1.2, -1.2, 1.8, 0.0, -1.5, 0.0]
 
+        # Slight motion from P2 toward leaf
+        leaf_pose = [0.620, -0.180, 1.720, 0.026, 0.536, 0.0]
+
         p11_p12_safe = [1.25, -1.65, 2.15, 0.35, -1.20, 0.0]
 
         home = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
@@ -243,53 +309,55 @@ class MoveWithMoveIt(Node):
         sequence = [
             ("P2", p2),
 
-            ("P1", p1),
+            ("LEAF", leaf_pose),
 
-            ("P2", p2),
+            #("P1", p1),
 
-            ("P3", p3),
+            #("P2", p2),
 
-            ("P4", p4),
+            #("P3", p3),
 
-            ("P5", p5),
+            #("P4", p4),
 
-            ("P6", p6),
+            #("P5", p5),
 
-            ("P7", p7),
+            #("P6", p6),
 
-            ("P8", p8),
+            #("P7", p7),
 
-            ("P9", p9),
+            #("P8", p8),
 
-            ("P10", p10),
+            #("P9", p9),
 
-            ("P11", p11),
+            #("P10", p10),
 
-            ("P12", p12),
+            #("P11", p11),
 
-            ("P13", p13),
+            #("P12", p12),
 
-            ("P14", p14),
+            #("P13", p13),
 
-            ("P15", p15),
+            #("P14", p14),
 
-            ("P16", p16),
+            #("P15", p15),
 
-            ("P17", p17),
+            #("P16", p16),
 
-            ("P18", p18),
+            #("P17", p17),
 
-            ("P19", p19),
+            #("P18", p18),
 
-            ("P20", p20),
+            #("P19", p19),
 
-            ("P21", p21),
+            #("P20", p20),
 
-            ("P22", p22),
+            #("P21", p21),
 
-            ("P23", p23),
+            #("P22", p22),
 
-            ("P24", p24),
+            #("P23", p23),
+
+            #("P24", p24),
 
             ("HOME", home),
          
