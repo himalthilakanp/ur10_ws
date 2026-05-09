@@ -343,5 +343,220 @@
   <child link="obstacle_8"/>
   <origin xyz="0.45 -0.3 1.5" rpy="0 0 0"/>
 </joint>
+<robot name="ur10e_cylinder">
 
-</robot>
+  <link name="world"/>
+
+  <joint name="world_to_base" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0.6" rpy="0 0 4.71239"/>
+  </joint>
+
+  <!-- MATERIAL -->
+  <material name="grey"><color rgba="0.5 0.5 0.5 1.0"/></material>
+  <material name="green"><color rgba="0.1 0.8 0.1 1.0"/></material>
+  <material name="yellow"><color rgba="1.0 0.9 0.1 1.0"/></material>
+  <material name="black"><color rgba="0.05 0.05 0.05 1.0"/></material>
+
+  <!-- BASE -->
+  <link name="base_link">
+    <visual>
+      <geometry><cylinder length="0.18" radius="0.06"/></geometry>
+      <origin xyz="0 0 0.09"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry><cylinder length="0.18" radius="0.06"/></geometry>
+      <origin xyz="0 0 0.09"/>
+    </collision>
+  </link>
+
+  <!-- JOINT 1 -->
+  <joint name="shoulder_pan_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="link1"/>
+    <origin xyz="0 0 0.127"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="1.0" lower="0.00" upper="3.14"/>
+  </joint>
+
+  <link name="link1">
+    <visual>
+      <geometry><cylinder length="0.15" radius="0.06"/></geometry>
+      <origin xyz="0 0 0.075"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry><cylinder length="0.15" radius="0.06"/></geometry>
+      <origin xyz="0 0 0.075"/>
+    </collision>
+  </link>
+
+  <!-- JOINT 2 -->
+  <joint name="shoulder_lift_joint" type="revolute">
+    <parent link="link1"/>
+    <child link="link2"/>
+    <origin xyz="0 -0.11 0.15" rpy="0 1.5708 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="100" velocity="1.0" lower="-6.28" upper="6.28"/>
+  </joint>
+
+  <!-- LINK2 (HALF LENGTH) -->
+  <link name="link2">
+    <visual>
+      <geometry><cylinder length="0.3065" radius="0.05"/></geometry>
+      <origin xyz="0 0 0.15325"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry><cylinder length="0.3065" radius="0.05"/></geometry>
+      <origin xyz="0 0 0.15325"/>
+    </collision>
+  </link>
+
+  <!-- JOINT 3 -->
+  <joint name="elbow_joint" type="revolute">
+    <parent link="link2"/>
+    <child link="link3"/>
+    <origin xyz="0 0.095 0.3065"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="100" velocity="1.0" lower="-6.28" upper="6.28"/>
+  </joint>
+
+  <link name="link3">
+    <visual>
+      <geometry><cylinder length="0.571" radius="0.045"/></geometry>
+      <origin xyz="0 0 0.2855"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry><cylinder length="0.571" radius="0.045"/></geometry>
+      <origin xyz="0 0 0.2855"/>
+    </collision>
+  </link>
+
+  <!-- JOINT 4 -->
+  <joint name="wrist_1_joint" type="revolute">
+    <parent link="link3"/>
+    <child link="link4"/>
+    <origin xyz="0 -0.08 0.571"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="50" velocity="1.0" lower="-6.28" upper="6.28"/>
+  </joint>
+
+  <link name="link4">
+    <visual>
+      <geometry><cylinder length="0.174" radius="0.04"/></geometry>
+      <origin xyz="0 0 0.087"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry><cylinder length="0.174" radius="0.04"/></geometry>
+      <origin xyz="0 0 0.087"/>
+    </collision>
+  </link>
+
+  <!-- JOINT 5 -->
+  <joint name="wrist_2_joint" type="revolute">
+    <parent link="link4"/>
+    <child link="link5"/>
+    <origin xyz="0 0 0.174"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="50" velocity="1.0" lower="-6.28" upper="6.28"/>
+  </joint>
+
+  <link name="link5">
+    <visual>
+      <geometry><cylinder length="0.120" radius="0.035"/></geometry>
+      <origin xyz="0 0.06 0" rpy="1.5708 0 0"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry><cylinder length="0.120" radius="0.035"/></geometry>
+      <origin xyz="0 0.06 0" rpy="1.5708 0 0"/>
+    </collision>
+  </link>
+
+  <!-- JOINT 6 -->
+  <joint name="wrist_3_joint" type="revolute">
+    <parent link="link5"/>
+    <child link="tool0"/>
+    <origin xyz="0 0.120 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="50" velocity="1.0" lower="-6.28" upper="6.28"/>
+  </joint>
+
+  <link name="tool0">
+    <visual>
+      <geometry><box size="0.04 0.02 0.02"/></geometry>
+      <origin xyz="0 0 0" rpy="0 0 1.5708"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry><box size="0.04 0.02 0.02"/></geometry>
+      <origin xyz="0 0 0" rpy="0 0 1.5708"/>
+    </collision>
+  </link>
+  <!-- ========================= -->
+  <!-- GRIPPER BASE -->
+  <!-- ========================= -->
+
+  <joint name="tool0_to_gripper" type="fixed">
+    <parent link="tool0"/>
+    <child link="gripper_base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="gripper_base_link">
+    <visual>
+      <geometry>
+        <box size="0.06 0.02 0.02"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+  </link>
+
+  <!-- LEFT FINGER -->
+
+  <joint name="left_finger_joint" type="prismatic">
+    <parent link="gripper_base_link"/>
+    <child link="left_finger"/>
+    <origin xyz="0 0.025 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="0.0" upper="0.02"
+           effort="10" velocity="0.1"/>
+  </joint>
+
+  <link name="left_finger">
+    <visual>
+      <geometry>
+        <box size="0.02 0.01 0.06"/>
+      </geometry>
+      <origin xyz="0 0 0.03"/>
+      <material name="green"/>
+    </visual>
+  </link>
+
+  <!-- RIGHT FINGER -->
+
+  <joint name="right_finger_joint" type="prismatic">
+    <parent link="gripper_base_link"/>
+    <child link="right_finger"/>
+    <origin xyz="0 -0.025 0"/>
+    <axis xyz="0 -1 0"/>
+    <limit lower="0.0" upper="0.02"
+           effort="10" velocity="0.1"/>
+  </joint>
+
+  <link name="right_finger">
+    <visual>
+      <geometry>
+        <box size="0.02 0.01 0.06"/>
+      </geometry>
+      <origin xyz="0 0 0.03"/>
+      <material name="green"/>
+    </visual>
+  </link>
+
+ </robot>
