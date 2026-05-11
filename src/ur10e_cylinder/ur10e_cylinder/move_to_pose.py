@@ -2,6 +2,7 @@
 
 import rclpy
 import time
+import math
 
 from rclpy.node import Node
 from rclpy.action import ActionClient
@@ -12,10 +13,13 @@ from moveit_msgs.msg import (
     JointConstraint,
     CollisionObject,
     PlanningScene,
+    ObjectColor,
 )
 
 from shape_msgs.msg import SolidPrimitive
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, Quaternion
+from moveit_msgs.msg import ObjectColor
+from std_msgs.msg import ColorRGBA
 
 
 class MoveWithMoveIt(Node):
@@ -41,7 +45,7 @@ class MoveWithMoveIt(Node):
         # Add obstacle
         self.add_cylinder()
 
-        self.add_leaf()
+        self.add_leaves()
 
     # -------------------------------------------------
     # ADD CYLINDER OBSTACLE
@@ -65,7 +69,7 @@ class MoveWithMoveIt(Node):
         primitive.type = SolidPrimitive.CYLINDER
 
         # dimensions = [height, radius]
-        primitive.dimensions = [1.6, 0.08]
+        primitive.dimensions = [1.6, 0.015]
 
         pose = PoseStamped()
         pose.header.frame_id = "world"
@@ -89,58 +93,176 @@ class MoveWithMoveIt(Node):
 
         time.sleep(2)
 
-    #----------------------------------------------------
-    # ADD leaf
-    #----------------------------------------------------
-    def add_leaf(self):
+    # =================================================
+    # ADD LEAVES
+    # =================================================
+    def add_leaves(self):
 
-        scene = PlanningScene()
+        GOLDEN_ANGLE = math.radians(137.5)
 
-        scene.is_diff = True
+        CYLINDER_X = 0.45
+        CYLINDER_Y = -0.3
 
-        leaf = CollisionObject()
+        STEM_RADIUS = 0.015
 
-        leaf.id = "leaf"
+        NUM_LEAVES = 24
 
-        leaf.header.frame_id = "world"
+        TOTAL_HEIGHT = 1.35
 
-    #--------------------------------------------------
-    #LEAF SHAPE
-    #--------------------------------------------------
-        primitive = SolidPrimitive()
+        LEAF_RADIUS = STEM_RADIUS + 0.04
 
-        primitive.type = SolidPrimitive.BOX
+        # -------------------------------------------------
+        # FIRST LEAF OPPOSITE DIRECTION
+        # -------------------------------------------------
 
-    # dimensions [x, y, z]
-        primitive.dimensions = [0.12, 0.03, 0.01]
+        START_ANGLE = math.pi
 
-        pose = PoseStamped()
+        for i in range(NUM_LEAVES):
 
-        pose.header.frame_id = "world"
+            scene = PlanningScene()
 
-    #----------------------------------------------------
-    #LEAF POSITION
-    #NEAR CYLINDER I P! DIRECTION
-    #-----------------------------------------------------
-        pose.pose.position.x = 0.37
-        pose.pose.position.y = -0.3
-        pose.pose.position.z = 0.2
+            scene.is_diff = True
 
-        pose.pose.orientation.w = 1.0
+            leaf = CollisionObject()
 
-        leaf.primitives.append(primitive)
+            leaf.id = f"leaf_{i}"
 
-        leaf.primitive_poses.append(pose.pose)
+            leaf.header.frame_id = "world"
 
-        leaf.operation = CollisionObject.ADD
+            # -------------------------------------------------
+            # LEAF SHAPE
+            # -------------------------------------------------
 
-        scene.world.collision_objects.append(leaf)
+            primitive = SolidPrimitive()
 
-        self.scene_pub.publish(scene)
+            primitive.type = SolidPrimitive.BOX
 
-        self.get_logger().info("LEAF added")
+            # [length, width, thickness]
+            primitive.dimensions = [0.06, 0.015, 0.005]
 
-        time.sleep(1)
+            # -------------------------------------------------
+            # GOLDEN ANGLE ARRANGEMENT
+            # -------------------------------------------------
+
+            theta = START_ANGLE + i * GOLDEN_ANGLE
+
+            # first leaf at 20 cm height
+            z = 0.20 + (i / NUM_LEAVES) * TOTAL_HEIGHT
+
+            x = CYLINDER_X + LEAF_RADIUS * math.cos(theta)
+
+            y = CYLINDER_Y + LEAF_RADIUS * math.sin(theta)
+
+            pose = PoseStamped()
+
+            pose.header.frame_id = "world"
+
+            pose.pose.position.x = x
+            pose.pose.position.y = y
+            pose.pose.position.z = z
+
+            # -------------------------------------------------
+            # LEAF POINTS TOWARD STEM CENTER
+            # -------------------------------------------------
+
+            yaw = theta + math.pi
+
+            q = self.euler_to_quaternion(
+                0.0,
+                0.0,
+                yaw
+            )
+
+            pose.pose.orientation = q
+
+            leaf.primitives.append(primitive)
+
+            leaf.primitive_poses.append(pose.pose)
+
+            leaf.operation = CollisionObject.ADD
+
+            scene.world.collision_objects.append(leaf)
+
+            # -------------------------------------------------
+            # ORANGE LEAF COLOR
+            # -------------------------------------------------
+
+            color = ObjectColor()
+
+            color.id = leaf.id
+
+            color.color = ColorRGBA(
+                r=1.0,
+                g=0.45,
+                b=0.0,
+                a=1.0
+            )
+
+            scene.object_colors.append(color)
+
+            self.scene_pub.publish(scene)
+
+            time.sleep(0.03)
+
+        self.get_logger().info(
+            "24 golden-angle leaves added ✔"
+        )
+
+        time.sleep(2)
+
+    # =================================================
+    # EULER TO QUATERNION
+    # =================================================
+    def euler_to_quaternion(self, roll, pitch, yaw):
+
+        qx = (
+            math.sin(roll / 2) *
+            math.cos(pitch / 2) *
+            math.cos(yaw / 2)
+            -
+            math.cos(roll / 2) *
+            math.sin(pitch / 2) *
+            math.sin(yaw / 2)
+        )
+
+        qy = (
+            math.cos(roll / 2) *
+            math.sin(pitch / 2) *
+            math.cos(yaw / 2)
+            +
+            math.sin(roll / 2) *
+            math.cos(pitch / 2) *
+            math.sin(yaw / 2)
+        )
+
+        qz = (
+            math.cos(roll / 2) *
+            math.cos(pitch / 2) *
+            math.sin(yaw / 2)
+            -
+            math.sin(roll / 2) *
+            math.sin(pitch / 2) *
+            math.cos(yaw / 2)
+        )
+
+        qw = (
+            math.cos(roll / 2) *
+            math.cos(pitch / 2) *
+            math.cos(yaw / 2)
+            +
+            math.sin(roll / 2) *
+            math.sin(pitch / 2) *
+            math.sin(yaw / 2)
+        )
+
+        q = Quaternion()
+
+        q.x = qx
+        q.y = qy
+        q.z = qz
+        q.w = qw
+
+        return q
 
 
     # -------------------------------------------------
