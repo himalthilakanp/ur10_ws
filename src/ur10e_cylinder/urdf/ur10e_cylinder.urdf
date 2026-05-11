@@ -160,13 +160,13 @@
   <joint name="tool0_to_gripper" type="fixed">
     <parent link="tool0"/>
     <child link="gripper_base_link"/>
-    <origin xyz="0 0 0" rpy="-1.5708 0 0"/>
+    <origin xyz="0 0.03 0" rpy="-1.5708 0 0"/>
   </joint>
 
   <link name="gripper_base_link">
     <visual>
       <geometry>
-        <box size="0.06 0.02 0.02"/>
+        <box size="0.02 0.06 0.02"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -178,7 +178,7 @@
     <parent link="gripper_base_link"/>
     <child link="left_finger"/>
     <origin xyz="0 0.025 0"/>
-    <axis xyz="0 1 0"/>
+    <axis xyz="0 -1 0"/>
     <limit lower="0.0" upper="0.02"
            effort="10" velocity="0.1"/>
   </joint>
@@ -186,9 +186,9 @@
   <link name="left_finger">
     <visual>
       <geometry>
-        <box size="0.02 0.01 0.06"/>
+        <box size="0.02 0.01 0.05"/>
       </geometry>
-      <origin xyz="0 0 0.03"/>
+      <origin xyz="0 0 0.035"/>
       <material name="green"/>
     </visual>
   </link>
@@ -200,6 +200,7 @@
     <child link="right_finger"/>
     <origin xyz="0 -0.025 0"/>
     <axis xyz="0 -1 0"/>
+    <mimic joint="left_finger_joint" multiplier="-1.0"/>
     <limit lower="0.0" upper="0.02"
            effort="10" velocity="0.1"/>
   </joint>
@@ -207,9 +208,9 @@
   <link name="right_finger">
     <visual>
       <geometry>
-        <box size="0.02 0.01 0.06"/>
+        <box size="0.02 0.01 0.05"/>
       </geometry>
-      <origin xyz="0 0 0.03"/>
+      <origin xyz="0 0 0.035"/>
       <material name="green"/>
     </visual>
   </link>
