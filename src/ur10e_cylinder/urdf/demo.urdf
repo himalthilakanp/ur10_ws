@@ -8,555 +8,414 @@
     <origin xyz="0 0 0.6" rpy="0 0 4.71239"/>
   </joint>
 
-  <!-- MATERIAL -->
+  <!-- MATERIALS -->
   <material name="grey"><color rgba="0.5 0.5 0.5 1.0"/></material>
   <material name="green"><color rgba="0.1 0.8 0.1 1.0"/></material>
   <material name="yellow"><color rgba="1.0 0.9 0.1 1.0"/></material>
   <material name="black"><color rgba="0.05 0.05 0.05 1.0"/></material>
+  <material name="plant_green"><color rgba="0.0 0.6 0.0 1.0"/></material>
+  <material name="leaf"><color rgba="1.0 0.45 0.0 1.0"/></material>
 
-  <!-- BASE -->
-  <link name="base_link">
-    <visual>
-      <geometry><cylinder length="0.18" radius="0.06"/></geometry>
-      <origin xyz="0 0 0.09"/>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry><cylinder length="0.18" radius="0.06"/></geometry>
-      <origin xyz="0 0 0.09"/>
-    </collision>
-  </link>
-
-  <!-- JOINT 1 -->
-  <joint name="shoulder_pan_joint" type="revolute">
-    <parent link="base_link"/>
-    <child link="link1"/>
-    <origin xyz="0 0 0.127"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="100" velocity="1.0" lower="0.00" upper="3.14"/>
-  </joint>
-
-  <link name="link1">
-    <visual>
-      <geometry><cylinder length="0.15" radius="0.06"/></geometry>
-      <origin xyz="0 0 0.075"/>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry><cylinder length="0.15" radius="0.06"/></geometry>
-      <origin xyz="0 0 0.075"/>
-    </collision>
-  </link>
-
-  <!-- JOINT 2 (SHIFTED) -->
-  <joint name="shoulder_lift_joint" type="revolute">
-    <parent link="link1"/>
-    <child link="link2"/>
-    <origin xyz="0 -0.11 0.15" rpy="0 1.5708 0"/>
-    <axis xyz="0 1 0"/>
-    <limit effort="100" velocity="1.0" lower="-6.28" upper="6.28"/>
-  </joint>
-
-  <!-- LINK2 (HALF LENGTH) -->
-  <link name="link2">
-    <visual>
-      <geometry><cylinder length="0.3065" radius="0.05"/></geometry>
-      <origin xyz="0 0 0.15325"/>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry><cylinder length="0.3065" radius="0.05"/></geometry>
-      <origin xyz="0 0 0.15325"/>
-    </collision>
-  </link>
-
-  <!-- JOINT 3 (FLIPPED Y) -->
-  <joint name="elbow_joint" type="revolute">
-    <parent link="link2"/>
-    <child link="link3"/>
-    <origin xyz="0 0.095 0.3065"/>
-    <axis xyz="0 1 0"/>
-    <limit effort="100" velocity="1.0" lower="-6.28" upper="6.28"/>
-  </joint>
-
-  <link name="link3">
-    <visual>
-      <geometry><cylinder length="0.571" radius="0.045"/></geometry>
-      <origin xyz="0 0 0.2855"/>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry><cylinder length="0.571" radius="0.045"/></geometry>
-      <origin xyz="0 0 0.2855"/>
-    </collision>
-  </link>
-
-  <!-- JOINT 4 (FLIPPED Y) -->
-  <joint name="wrist_1_joint" type="revolute">
-    <parent link="link3"/>
-    <child link="link4"/>
-    <origin xyz="0 -0.08 0.571"/>
-    <axis xyz="0 1 0"/>
-    <limit effort="50" velocity="1.0" lower="-6.28" upper="6.28"/>
-  </joint>
-
-  <link name="link4">
-    <visual>
-      <geometry><cylinder length="0.174" radius="0.04"/></geometry>
-      <origin xyz="0 0 0.087"/>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry><cylinder length="0.174" radius="0.04"/></geometry>
-      <origin xyz="0 0 0.087"/>
-    </collision>
-  </link>
-
-  <!-- CAMERA -->
-  <link name="camera_link">
-    <visual>
-      <geometry><cylinder length="0.08" radius="0.02"/></geometry>
-      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
-      <material name="black"/>
-    </visual>
-    <collision>
-      <geometry><cylinder length="0.08" radius="0.02"/></geometry>
-      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
-    </collision>
-  </link>
-
-  <joint name="wrist_camera_joint" type="fixed">
-    <parent link="link4"/>
-    <child link="camera_link"/>
-    <origin xyz="0 0 0.1"/>
-  </joint>
-
-  <!-- JOINT 5 -->
-  <joint name="wrist_2_joint" type="revolute">
-    <parent link="link4"/>
-    <child link="link5"/>
-    <origin xyz="0 0 0.174"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="50" velocity="1.0" lower="-6.28" upper="6.28"/>
-  </joint>
-
-  <link name="link5">
-    <visual>
-      <geometry><cylinder length="0.120" radius="0.035"/></geometry>
-      <origin xyz="0 0.06 0" rpy="1.5708 0 0"/>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry><cylinder length="0.120" radius="0.035"/></geometry>
-      <origin xyz="0 0.06 0" rpy="1.5708 0 0"/>
-    </collision>
-  </link>
-
-  <!-- JOINT 6 -->
-  <joint name="wrist_3_joint" type="revolute">
-    <parent link="link5"/>
-    <child link="tool0"/>
-    <origin xyz="0 0.120 0"/>
-    <axis xyz="0 1 0"/>
-    <limit effort="50" velocity="1.0" lower="-6.28" upper="6.28"/>
-  </joint>
-
-  <link name="tool0">
-    <visual>
-      <geometry><box size="0.04 0.02 0.02"/></geometry>
-      <origin xyz="0 0 0" rpy="0 0 1.5708"/>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry><box size="0.04 0.02 0.02"/></geometry>
-      <origin xyz="0 0 0" rpy="0 0 1.5708"/>
-    </collision>
-  </link>
-  <!-- ================= OBSTACLE CYLINDER (1.6 m total height, 8 stacked pieces) ================= -->
-
-<!-- piece height = 1.6 / 8 = 0.2 -->
-
-<!-- Piece 1 -->
-<link name="obstacle_1">
-  <visual>
-    <geometry>
-      <cylinder length="0.2" radius="0.2"/>
-    </geometry>
-    <material name="green"/>
-  </visual>
-  <collision>
-    <geometry>
-      <cylinder length="0.2" radius="0.2"/>
-    </geometry>
-  </collision>
-</link>
-
-<joint name="world_to_obstacle_1" type="fixed">
-  <parent link="world"/>
-  <child link="obstacle_1"/>
-  <origin xyz="0.45 -0.3 0.1" rpy="0 0 0"/>
-</joint>
-
-<!-- Piece 2 -->
-<link name="obstacle_2">
-  <visual>
-    <geometry>
-      <cylinder length="0.2" radius="0.2"/>
-    </geometry>
-    <material name="yellow"/>
-  </visual>
-  <collision>
-    <geometry>
-      <cylinder length="0.2" radius="0.2"/>
-    </geometry>
-  </collision>
-</link>
-
-<joint name="world_to_obstacle_2" type="fixed">
-  <parent link="world"/>
-  <child link="obstacle_2"/>
-  <origin xyz="0.45 -0.3 0.3" rpy="0 0 0"/>
-</joint>
-
-<!-- Piece 3 -->
-<link name="obstacle_3">
-  <visual>
-    <geometry>
-      <cylinder length="0.2" radius="0.2"/>
-    </geometry>
-    <material name="green"/>
-  </visual>
-  <collision>
-    <geometry>
-      <cylinder length="0.2" radius="0.2"/>
-    </geometry>
-  </collision>
-</link>
-
-<joint name="world_to_obstacle_3" type="fixed">
-  <parent link="world"/>
-  <child link="obstacle_3"/>
-  <origin xyz="0.45 -0.3 0.5" rpy="0 0 0"/>
-</joint>
-
-<!-- Piece 4 -->
-<link name="obstacle_4">
-  <visual>
-    <geometry>
-      <cylinder length="0.2" radius="0.2"/>
-    </geometry>
-    <material name="yellow"/>
-  </visual>
-  <collision>
-    <geometry>
-      <cylinder length="0.2" radius="0.2"/>
-    </geometry>
-  </collision>
-</link>
-
-<joint name="world_to_obstacle_4" type="fixed">
-  <parent link="world"/>
-  <child link="obstacle_4"/>
-  <origin xyz="0.45 -0.3 0.7" rpy="0 0 0"/>
-</joint>
-
-<!-- Piece 5 -->
-<link name="obstacle_5">
-  <visual>
-    <geometry>
-      <cylinder length="0.2" radius="0.2"/>
-    </geometry>
-    <material name="green"/>
-  </visual>
-  <collision>
-    <geometry>
-      <cylinder length="0.2" radius="0.2"/>
-    </geometry>
-  </collision>
-</link>
-
-<joint name="world_to_obstacle_5" type="fixed">
-  <parent link="world"/>
-  <child link="obstacle_5"/>
-  <origin xyz="0.45 -0.3 0.9" rpy="0 0 0"/>
-</joint>
-
-<!-- Piece 6 -->
-<link name="obstacle_6">
-  <visual>
-    <geometry>
-      <cylinder length="0.2" radius="0.2"/>
-    </geometry>
-    <material name="yellow"/>
-  </visual>
-  <collision>
-    <geometry>
-      <cylinder length="0.2" radius="0.2"/>
-    </geometry>
-  </collision>
-</link>
-
-<joint name="world_to_obstacle_6" type="fixed">
-  <parent link="world"/>
-  <child link="obstacle_6"/>
-  <origin xyz="0.45 -0.3 1.1" rpy="0 0 0"/>
-</joint>
-
-<!-- Piece 7 -->
-<link name="obstacle_7">
-  <visual>
-    <geometry>
-      <cylinder length="0.2" radius="0.2"/>
-    </geometry>
-    <material name="green"/>
-  </visual>
-  <collision>
-    <geometry>
-      <cylinder length="0.2" radius="0.2"/>
-    </geometry>
-  </collision>
-</link>
-
-<joint name="world_to_obstacle_7" type="fixed">
-  <parent link="world"/>
-  <child link="obstacle_7"/>
-  <origin xyz="0.45 -0.3 1.3" rpy="0 0 0"/>
-</joint>
-
-<!-- Piece 8 -->
-<link name="obstacle_8">
-  <visual>
-    <geometry>
-      <cylinder length="0.2" radius="0.2"/>
-    </geometry>
-    <material name="yellow"/>
-  </visual>
-  <collision>
-    <geometry>
-      <cylinder length="0.2" radius="0.2"/>
-    </geometry>
-  </collision>
-</link>
-
-<joint name="world_to_obstacle_8" type="fixed">
-  <parent link="world"/>
-  <child link="obstacle_8"/>
-  <origin xyz="0.45 -0.3 1.5" rpy="0 0 0"/>
-</joint>
-<robot name="ur10e_cylinder">
-
-  <link name="world"/>
-
-  <joint name="world_to_base" type="fixed">
-    <parent link="world"/>
-    <child link="base_link"/>
-    <origin xyz="0 0 0.6" rpy="0 0 4.71239"/>
-  </joint>
-
-  <!-- MATERIAL -->
-  <material name="grey"><color rgba="0.5 0.5 0.5 1.0"/></material>
-  <material name="green"><color rgba="0.1 0.8 0.1 1.0"/></material>
-  <material name="yellow"><color rgba="1.0 0.9 0.1 1.0"/></material>
-  <material name="black"><color rgba="0.05 0.05 0.05 1.0"/></material>
-
-  <!-- BASE -->
-  <link name="base_link">
-    <visual>
-      <geometry><cylinder length="0.18" radius="0.06"/></geometry>
-      <origin xyz="0 0 0.09"/>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry><cylinder length="0.18" radius="0.06"/></geometry>
-      <origin xyz="0 0 0.09"/>
-    </collision>
-  </link>
-
-  <!-- JOINT 1 -->
-  <joint name="shoulder_pan_joint" type="revolute">
-    <parent link="base_link"/>
-    <child link="link1"/>
-    <origin xyz="0 0 0.127"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="100" velocity="1.0" lower="0.00" upper="3.14"/>
-  </joint>
-
-  <link name="link1">
-    <visual>
-      <geometry><cylinder length="0.15" radius="0.06"/></geometry>
-      <origin xyz="0 0 0.075"/>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry><cylinder length="0.15" radius="0.06"/></geometry>
-      <origin xyz="0 0 0.075"/>
-    </collision>
-  </link>
-
-  <!-- JOINT 2 -->
-  <joint name="shoulder_lift_joint" type="revolute">
-    <parent link="link1"/>
-    <child link="link2"/>
-    <origin xyz="0 -0.11 0.15" rpy="0 1.5708 0"/>
-    <axis xyz="0 1 0"/>
-    <limit effort="100" velocity="1.0" lower="-6.28" upper="6.28"/>
-  </joint>
-
-  <!-- LINK2 (HALF LENGTH) -->
-  <link name="link2">
-    <visual>
-      <geometry><cylinder length="0.3065" radius="0.05"/></geometry>
-      <origin xyz="0 0 0.15325"/>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry><cylinder length="0.3065" radius="0.05"/></geometry>
-      <origin xyz="0 0 0.15325"/>
-    </collision>
-  </link>
-
-  <!-- JOINT 3 -->
-  <joint name="elbow_joint" type="revolute">
-    <parent link="link2"/>
-    <child link="link3"/>
-    <origin xyz="0 0.095 0.3065"/>
-    <axis xyz="0 1 0"/>
-    <limit effort="100" velocity="1.0" lower="-6.28" upper="6.28"/>
-  </joint>
-
-  <link name="link3">
-    <visual>
-      <geometry><cylinder length="0.571" radius="0.045"/></geometry>
-      <origin xyz="0 0 0.2855"/>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry><cylinder length="0.571" radius="0.045"/></geometry>
-      <origin xyz="0 0 0.2855"/>
-    </collision>
-  </link>
-
-  <!-- JOINT 4 -->
-  <joint name="wrist_1_joint" type="revolute">
-    <parent link="link3"/>
-    <child link="link4"/>
-    <origin xyz="0 -0.08 0.571"/>
-    <axis xyz="0 1 0"/>
-    <limit effort="50" velocity="1.0" lower="-6.28" upper="6.28"/>
-  </joint>
-
-  <link name="link4">
-    <visual>
-      <geometry><cylinder length="0.174" radius="0.04"/></geometry>
-      <origin xyz="0 0 0.087"/>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry><cylinder length="0.174" radius="0.04"/></geometry>
-      <origin xyz="0 0 0.087"/>
-    </collision>
-  </link>
-
-  <!-- JOINT 5 -->
-  <joint name="wrist_2_joint" type="revolute">
-    <parent link="link4"/>
-    <child link="link5"/>
-    <origin xyz="0 0 0.174"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="50" velocity="1.0" lower="-6.28" upper="6.28"/>
-  </joint>
-
-  <link name="link5">
-    <visual>
-      <geometry><cylinder length="0.120" radius="0.035"/></geometry>
-      <origin xyz="0 0.06 0" rpy="1.5708 0 0"/>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry><cylinder length="0.120" radius="0.035"/></geometry>
-      <origin xyz="0 0.06 0" rpy="1.5708 0 0"/>
-    </collision>
-  </link>
-
-  <!-- JOINT 6 -->
-  <joint name="wrist_3_joint" type="revolute">
-    <parent link="link5"/>
-    <child link="tool0"/>
-    <origin xyz="0 0.120 0"/>
-    <axis xyz="0 1 0"/>
-    <limit effort="50" velocity="1.0" lower="-6.28" upper="6.28"/>
-  </joint>
-
-  <link name="tool0">
-    <visual>
-      <geometry><box size="0.04 0.02 0.02"/></geometry>
-      <origin xyz="0 0 0" rpy="0 0 1.5708"/>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry><box size="0.04 0.02 0.02"/></geometry>
-      <origin xyz="0 0 0" rpy="0 0 1.5708"/>
-    </collision>
-  </link>
   <!-- ========================= -->
-  <!-- GRIPPER BASE -->
+  <!-- ROBOT ARM                 -->
+  <!-- ========================= -->
+
+  <link name="base_link">
+    <visual>
+      <geometry><cylinder length="0.18" radius="0.06"/></geometry>
+      <origin xyz="0 0 0.09"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry><cylinder length="0.18" radius="0.06"/></geometry>
+      <origin xyz="0 0 0.09"/>
+    </collision>
+  </link>
+
+  <joint name="shoulder_pan_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="link1"/>
+    <origin xyz="0 0 0.127"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="1.0" lower="0.00" upper="3.14"/>
+  </joint>
+
+  <link name="link1">
+    <visual>
+      <geometry><cylinder length="0.15" radius="0.06"/></geometry>
+      <origin xyz="0 0 0.075"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry><cylinder length="0.15" radius="0.06"/></geometry>
+      <origin xyz="0 0 0.075"/>
+    </collision>
+  </link>
+
+  <joint name="shoulder_lift_joint" type="revolute">
+    <parent link="link1"/>
+    <child link="link2"/>
+    <origin xyz="0 -0.11 0.15" rpy="0 1.5708 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="100" velocity="1.0" lower="-6.28" upper="6.28"/>
+  </joint>
+
+  <link name="link2">
+    <visual>
+      <geometry><cylinder length="0.3065" radius="0.05"/></geometry>
+      <origin xyz="0 0 0.15325"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry><cylinder length="0.3065" radius="0.05"/></geometry>
+      <origin xyz="0 0 0.15325"/>
+    </collision>
+  </link>
+
+  <joint name="elbow_joint" type="revolute">
+    <parent link="link2"/>
+    <child link="link3"/>
+    <origin xyz="0 0.095 0.3065"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="100" velocity="1.0" lower="-6.28" upper="6.28"/>
+  </joint>
+
+  <link name="link3">
+    <visual>
+      <geometry><cylinder length="0.571" radius="0.045"/></geometry>
+      <origin xyz="0 0 0.2855"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry><cylinder length="0.571" radius="0.045"/></geometry>
+      <origin xyz="0 0 0.2855"/>
+    </collision>
+  </link>
+
+  <joint name="wrist_1_joint" type="revolute">
+    <parent link="link3"/>
+    <child link="link4"/>
+    <origin xyz="0 -0.08 0.571"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="50" velocity="1.0" lower="-6.28" upper="6.28"/>
+  </joint>
+
+  <link name="link4">
+    <visual>
+      <geometry><cylinder length="0.174" radius="0.04"/></geometry>
+      <origin xyz="0 0 0.087"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry><cylinder length="0.174" radius="0.04"/></geometry>
+      <origin xyz="0 0 0.087"/>
+    </collision>
+  </link>
+
+  <joint name="wrist_2_joint" type="revolute">
+    <parent link="link4"/>
+    <child link="link5"/>
+    <origin xyz="0 0 0.174"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="50" velocity="1.0" lower="-6.28" upper="6.28"/>
+  </joint>
+
+  <link name="link5">
+    <visual>
+      <geometry><cylinder length="0.120" radius="0.035"/></geometry>
+      <origin xyz="0 0.06 0" rpy="1.5708 0 0"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry><cylinder length="0.120" radius="0.035"/></geometry>
+      <origin xyz="0 0.06 0" rpy="1.5708 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="wrist_3_joint" type="revolute">
+    <parent link="link5"/>
+    <child link="tool0"/>
+    <origin xyz="0 0.120 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="50" velocity="1.0" lower="-6.28" upper="6.28"/>
+  </joint>
+
+  <link name="tool0">
+    <visual>
+      <geometry><box size="0.04 0.02 0.02"/></geometry>
+      <origin xyz="0 0 0" rpy="0 0 1.5708"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry><box size="0.04 0.02 0.02"/></geometry>
+      <origin xyz="0 0 0" rpy="0 0 1.5708"/>
+    </collision>
+  </link>
+
+  <!-- ========================= -->
+  <!-- GRIPPER                   -->
   <!-- ========================= -->
 
   <joint name="tool0_to_gripper" type="fixed">
     <parent link="tool0"/>
     <child link="gripper_base_link"/>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <origin xyz="0 0.03 0" rpy="-1.5708 0 0"/>
   </joint>
 
   <link name="gripper_base_link">
     <visual>
-      <geometry>
-        <box size="0.06 0.02 0.02"/>
-      </geometry>
+      <geometry><box size="0.02 0.06 0.02"/></geometry>
       <material name="black"/>
     </visual>
   </link>
-
-  <!-- LEFT FINGER -->
 
   <joint name="left_finger_joint" type="prismatic">
     <parent link="gripper_base_link"/>
     <child link="left_finger"/>
     <origin xyz="0 0.025 0"/>
-    <axis xyz="0 1 0"/>
-    <limit lower="0.0" upper="0.02"
-           effort="10" velocity="0.1"/>
+    <axis xyz="0 -1 0"/>
+    <limit lower="0.0" upper="0.02" effort="10" velocity="0.1"/>
   </joint>
 
   <link name="left_finger">
     <visual>
-      <geometry>
-        <box size="0.02 0.01 0.06"/>
-      </geometry>
-      <origin xyz="0 0 0.03"/>
+      <geometry><box size="0.02 0.01 0.05"/></geometry>
+      <origin xyz="0 0 0.035"/>
       <material name="green"/>
     </visual>
   </link>
-
-  <!-- RIGHT FINGER -->
 
   <joint name="right_finger_joint" type="prismatic">
     <parent link="gripper_base_link"/>
     <child link="right_finger"/>
     <origin xyz="0 -0.025 0"/>
     <axis xyz="0 -1 0"/>
-    <limit lower="0.0" upper="0.02"
-           effort="10" velocity="0.1"/>
+    <mimic joint="left_finger_joint" multiplier="-1.0"/>
+    <limit lower="0.0" upper="0.02" effort="10" velocity="0.1"/>
   </joint>
 
   <link name="right_finger">
     <visual>
-      <geometry>
-        <box size="0.02 0.01 0.06"/>
-      </geometry>
-      <origin xyz="0 0 0.03"/>
+      <geometry><box size="0.02 0.01 0.05"/></geometry>
+      <origin xyz="0 0 0.035"/>
       <material name="green"/>
     </visual>
   </link>
 
- </robot>
+  <!-- ========================= -->
+  <!-- PLANT STEM                -->
+  <!-- ========================= -->
+
+  <joint name="world_to_plant" type="fixed">
+    <parent link="world"/>
+    <child link="plant_base"/>
+    <origin xyz="0.45 -0.30 0.0"/>
+  </joint>
+
+  <link name="plant_base">
+    <visual>
+      <geometry><cylinder length="1.35" radius="0.015"/></geometry>
+      <origin xyz="0 0 0.675"/>
+      <material name="plant_green"/>
+    </visual>
+  </link>
+
+  <!-- ========================= -->
+  <!-- LEAVES — golden angle     -->
+  <!-- parent: world (absolute)  -->
+  <!-- yaw = theta + pi          -->
+  <!-- ========================= -->
+
+  <!-- Leaf 0: x=0.3950 y=-0.3000 z=0.2000 yaw=180.0° -->
+  <joint name="leaf_0_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_0"/>
+    <origin xyz="0.3950 -0.3000 0.2000" rpy="0 0 3.14159"/>
+  </joint>
+  <link name="leaf_0"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 1: x=0.4910 y=-0.2620 z=0.2563 yaw=317.5° -->
+  <joint name="leaf_1_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_1"/>
+    <origin xyz="0.4910 -0.2620 0.2563" rpy="0 0 5.54306"/>
+  </joint>
+  <link name="leaf_1"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 2: x=0.5042 y=-0.3385 z=0.3125 yaw=95.0° -->
+  <joint name="leaf_2_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_2"/>
+    <origin xyz="0.5042 -0.3385 0.3125" rpy="0 0 1.65806"/>
+  </joint>
+  <link name="leaf_2"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 3: x=0.4399 y=-0.3522 z=0.3688 yaw=232.5° -->
+  <joint name="leaf_3_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_3"/>
+    <origin xyz="0.4399 -0.3522 0.3688" rpy="0 0 4.05777"/>
+  </joint>
+  <link name="leaf_3"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 4: x=0.3967 y=-0.2874 z=0.4250 yaw=10.0° -->
+  <joint name="leaf_4_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_4"/>
+    <origin xyz="0.3967 -0.2874 0.4250" rpy="0 0 0.17453"/>
+  </joint>
+  <link name="leaf_4"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 5: x=0.4803 y=-0.2655 z=0.4813 yaw=147.5° -->
+  <joint name="leaf_5_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_5"/>
+    <origin xyz="0.4803 -0.2655 0.4813" rpy="0 0 2.57453"/>
+  </joint>
+  <link name="leaf_5"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 6: x=0.5050 y=-0.3328 z=0.5375 yaw=285.0° -->
+  <joint name="leaf_6_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_6"/>
+    <origin xyz="0.5050 -0.3328 0.5375" rpy="0 0 4.97419"/>
+  </joint>
+  <link name="leaf_6"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 7: x=0.4438 y=-0.3513 z=0.5938 yaw=62.5° -->
+  <joint name="leaf_7_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_7"/>
+    <origin xyz="0.4438 -0.3513 0.5938" rpy="0 0 1.09083"/>
+  </joint>
+  <link name="leaf_7"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 8: x=0.3959 y=-0.2896 z=0.6500 yaw=200.0° -->
+  <joint name="leaf_8_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_8"/>
+    <origin xyz="0.3959 -0.2896 0.6500" rpy="0 0 3.49066"/>
+  </joint>
+  <link name="leaf_8"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 9: x=0.4773 y=-0.2671 z=0.7063 yaw=337.5° -->
+  <joint name="leaf_9_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_9"/>
+    <origin xyz="0.4773 -0.2671 0.7063" rpy="0 0 5.89049"/>
+  </joint>
+  <link name="leaf_9"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 10: x=0.5053 y=-0.3275 z=0.7625 yaw=115.0° -->
+  <joint name="leaf_10_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_10"/>
+    <origin xyz="0.5053 -0.3275 0.7625" rpy="0 0 2.00713"/>
+  </joint>
+  <link name="leaf_10"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 11: x=0.4474 y=-0.3502 z=0.8188 yaw=252.5° -->
+  <joint name="leaf_11_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_11"/>
+    <origin xyz="0.4474 -0.3502 0.8188" rpy="0 0 4.40714"/>
+  </joint>
+  <link name="leaf_11"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 12: x=0.3951 y=-0.2918 z=0.8750 yaw=30.0° -->
+  <joint name="leaf_12_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_12"/>
+    <origin xyz="0.3951 -0.2918 0.8750" rpy="0 0 0.52360"/>
+  </joint>
+  <link name="leaf_12"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 13: x=0.4744 y=-0.2688 z=0.9313 yaw=167.5° -->
+  <joint name="leaf_13_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_13"/>
+    <origin xyz="0.4744 -0.2688 0.9313" rpy="0 0 2.92360"/>
+  </joint>
+  <link name="leaf_13"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 14: x=0.5054 y=-0.3221 z=0.9875 yaw=305.0° -->
+  <joint name="leaf_14_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_14"/>
+    <origin xyz="0.5054 -0.3221 0.9875" rpy="0 0 5.32325"/>
+  </joint>
+  <link name="leaf_14"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 15: x=0.4510 y=-0.3490 z=1.0438 yaw=82.5° -->
+  <joint name="leaf_15_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_15"/>
+    <origin xyz="0.4510 -0.3490 1.0438" rpy="0 0 1.43990"/>
+  </joint>
+  <link name="leaf_15"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 16: x=0.3944 y=-0.2941 z=1.1000 yaw=220.0° -->
+  <joint name="leaf_16_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_16"/>
+    <origin xyz="0.3944 -0.2941 1.1000" rpy="0 0 3.83972"/>
+  </joint>
+  <link name="leaf_16"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 17: x=0.4716 y=-0.2705 z=1.1563 yaw=357.5° -->
+  <joint name="leaf_17_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_17"/>
+    <origin xyz="0.4716 -0.2705 1.1563" rpy="0 0 6.23972"/>
+  </joint>
+  <link name="leaf_17"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 18: x=0.5052 y=-0.3168 z=1.2125 yaw=135.0° -->
+  <joint name="leaf_18_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_18"/>
+    <origin xyz="0.5052 -0.3168 1.2125" rpy="0 0 2.35619"/>
+  </joint>
+  <link name="leaf_18"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 19: x=0.4544 y=-0.3477 z=1.2688 yaw=272.5° -->
+  <joint name="leaf_19_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_19"/>
+    <origin xyz="0.4544 -0.3477 1.2688" rpy="0 0 4.75619"/>
+  </joint>
+  <link name="leaf_19"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 20: x=0.3937 y=-0.2963 z=1.3250 yaw=50.0° -->
+  <joint name="leaf_20_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_20"/>
+    <origin xyz="0.3937 -0.2963 1.3250" rpy="0 0 0.87266"/>
+  </joint>
+  <link name="leaf_20"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 21: x=0.4688 y=-0.2722 z=1.3813 yaw=187.5° -->
+  <joint name="leaf_21_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_21"/>
+    <origin xyz="0.4688 -0.2722 1.3813" rpy="0 0 3.27249"/>
+  </joint>
+  <link name="leaf_21"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 22: x=0.5048 y=-0.3115 z=1.4375 yaw=325.0° -->
+  <joint name="leaf_22_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_22"/>
+    <origin xyz="0.5048 -0.3115 1.4375" rpy="0 0 5.67232"/>
+  </joint>
+  <link name="leaf_22"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+  <!-- Leaf 23: x=0.4577 y=-0.3464 z=1.4938 yaw=102.5° -->
+  <joint name="leaf_23_joint" type="fixed">
+    <parent link="world"/>
+    <child link="leaf_23"/>
+    <origin xyz="0.4577 -0.3464 1.4938" rpy="0 0 1.78897"/>
+  </joint>
+  <link name="leaf_23"><visual><geometry><box size="0.06 0.015 0.005"/></geometry><material name="leaf"/></visual></link>
+
+</robot>

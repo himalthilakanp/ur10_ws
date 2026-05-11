@@ -21,34 +21,19 @@ def generate_launch_description():
         }.items(),
     )
 
-    spawn_controllers = TimerAction(
-        period=5.0,
-        actions=[
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    os.path.join(
-                        get_package_share_directory("ur10e_moveit_config"),
-                        "launch",
-                        "spawn_controllers.launch.py"
-                    )
-                )
-            )
-        ]
-    )
-
     move_script = TimerAction(
         period=12.0,
         actions=[
             Node(
                 package="ur10e_cylinder",
                 executable="move_to_pose",
-                output="screen"
+                output="screen",
+                emulate_tty=True,
             )
         ]
     )
 
     return LaunchDescription([
         moveit_demo,
-        spawn_controllers,
         move_script,
     ])
