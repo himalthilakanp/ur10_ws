@@ -288,7 +288,7 @@ class MoveWithMoveIt(Node):
     def run(self):
 
         p2 = [0.572, -0.222, 1.776, 0.026, 0.536, 0.0]
-        leaf_pose = [0.752, 0.053, 1.004, 0.577, -0.561, 0.0]
+        leaf_pose = [0.817, -0.230, 1.362, 0.441, 0.275, 0.0]
         home = [0, 0, 0, 0, 0, 0]
 
         sequence = [
@@ -300,7 +300,9 @@ class MoveWithMoveIt(Node):
 
             ("GRIP_CLOSE", None),
 
-            ("ATTACH", "leaf_0"),
+            ("ATTACH", "leaf_1"),
+
+            ("TWIST_TEST", leaf_pose),
 
             ("LIFT", p2),
 
@@ -319,6 +321,17 @@ class MoveWithMoveIt(Node):
 
             if name == "ATTACH":
                 self.attach_leaf(data)
+                continue
+            
+            if name == "TWIST_TEST":
+
+                test_pose = data.copy()
+
+                # rotate wrist_3_joint
+                test_pose[5] += math.pi / 2
+
+                self.move_to_joints(test_pose, "TWIST_TEST")
+
                 continue
 
             self.move_to_joints(data, name)
