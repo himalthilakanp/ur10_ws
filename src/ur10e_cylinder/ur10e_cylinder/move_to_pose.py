@@ -203,6 +203,35 @@ class MoveWithMoveIt(Node):
         rclpy.spin_until_future_complete(self, result_future)
 
         self.get_logger().info("Gripper done ✔")
+    
+    def pluck_motion(self, current_pose):
+        """
+        Adds real plucking behavior:
+        - slight downward tilt
+        - half rotation
+        - lift
+        """
+
+        # unpack current joints
+        j = list(current_pose)
+
+        # 1. small downward tilt (wrist_1_joint)
+        tilt_pose = j.copy()
+        tilt_pose[3] += 0.4   # pitch down
+
+        self.move_to_joints(tilt_pose, "TILT_DOWN")
+
+        # 2. half rotation (wrist_3_joint)
+        twist_pose = tilt_pose.copy()
+        twist_pose[5] += math.pi / 2   # 90° twist
+
+        self.move_to_joints(twist_pose, "TWIST")
+
+        # 3. slight pull upward
+        lift_pose = twist_pose.copy()
+        lift_pose[2] += 0.05  # small lift in joint-space approximation
+
+        self.move_to_joints(lift_pose, "LIFT_AFTER_PLUCK")
 
     # -------------------------------------------------
     # MOVE
@@ -285,7 +314,7 @@ class MoveWithMoveIt(Node):
                 continue
 
             if name == "GRIP_CLOSE":
-                self.move_gripper(0.04)
+                self.move_gripper(0.035)
                 continue
 
             if name == "ATTACH":
