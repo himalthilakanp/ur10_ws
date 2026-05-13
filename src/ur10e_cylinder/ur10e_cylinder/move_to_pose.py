@@ -6,6 +6,8 @@ import math
 
 from rclpy.node import Node
 from rclpy.action import ActionClient
+from visualization_msgs.msg import Marker
+from visualization_msgs.msg import MarkerArray
 
 from moveit_msgs.action import MoveGroup
 from moveit_msgs.msg import (
@@ -23,6 +25,8 @@ from std_msgs.msg import ColorRGBA
 
 from control_msgs.action import FollowJointTrajectory
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+from rclpy.qos import QoSProfile
+from rclpy.qos import DurabilityPolicy
 
 
 class MoveWithMoveIt(Node):
@@ -53,6 +57,15 @@ class MoveWithMoveIt(Node):
             PlanningScene,
             '/planning_scene',
             10
+        )
+        qos = QoSProfile(depth=10)
+        qos.durability = DurabilityPolicy.TRANSIENT_LOCAL
+
+
+        self.marker_pub = self.create_publisher(
+            MarkerArray,
+            "/visualization_marker_array",
+            qos
         )
 
         self.add_cylinder()
@@ -95,7 +108,12 @@ class MoveWithMoveIt(Node):
     # -------------------------------------------------
     # LEAVES
     # -------------------------------------------------
+    # -------------------------------------------------
+# LEAVES (VISUAL ONLY)
+# -------------------------------------------------
     def add_leaves(self):
+
+        marker_array = MarkerArray()
 
         GOLDEN_ANGLE = math.radians(137.5)
 
@@ -107,51 +125,123 @@ class MoveWithMoveIt(Node):
 
         for i in range(NUM_LEAVES):
 
-            scene = PlanningScene()
-            scene.is_diff = True
+            marker = Marker()
 
-            leaf = CollisionObject()
-            leaf.id = f"leaf_{i}"
-            leaf.header.frame_id = "world"
+            marker.header.frame_id = "world"
+            marker.header.stamp = self.get_clock().now().to_msg()
 
-            primitive = SolidPrimitive()
-            primitive.type = SolidPrimitive.BOX
-            primitive.dimensions = [0.06, 0.015, 0.005]
+            marker.ns = "leaves"
+            marker.id = i
+
+            marker.type = Marker.CUBE
+            marker.action = Marker.ADD
+
+            marker.lifetime.sec = 0
 
             theta = START_ANGLE + i * GOLDEN_ANGLE
+
             z = 0.20 + (i / NUM_LEAVES) * TOTAL_HEIGHT
 
             x = 0.45 + LEAF_RADIUS * math.cos(theta)
             y = -0.3 + LEAF_RADIUS * math.sin(theta)
 
-            pose = PoseStamped()
-            pose.header.frame_id = "world"
-            pose.pose.position.x = x
-            pose.pose.position.y = y
-            pose.pose.position.z = z
+            marker.pose.position.x = x
+            marker.pose.position.y = y
+            marker.pose.position.z = z
 
             yaw = theta + math.pi
+
             q = self.euler_to_quaternion(0, 0, yaw)
-            pose.pose.orientation = q
 
-            leaf.primitives.append(primitive)
-            leaf.primitive_poses.append(pose.pose)
-            leaf.operation = CollisionObject.ADD
+            marker.pose.orientation = q
 
-            scene.world.collision_objects.append(leaf)
+            # bigger temporary debug size
+            marker.scale.x = 0.06
+            marker.scale.y = 0.03
+            marker.scale.z = 0.01
 
-            color = ObjectColor()
-            color.id = leaf.id
-            color.color = ColorRGBA(r=1.0, g=0.45, b=0.0, a=1.0)
+            # bright green debug color
+            marker.color.r = 1.0
+            marker.color.g = 0.45
+            marker.color.b = 0.0
+            marker.color.a = 1.0
 
-            scene.object_colors.append(color)
+            marker_array.markers.append(marker)
 
-            self.scene_pub.publish(scene)
-            time.sleep(0.03)
+        self.marker_pub.publish(marker_array)
 
-        self.get_logger().info("Leaves added ✔")
-        time.sleep(2)
+        self.get_logger().info("All visual leaves added ✔")
+    
+    # -------------------------------------------------
+# ENABLE SINGLE LEAF COLLISION
+# -------------------------------------------------
+    def enable_leaf_collision(self, leaf_id, x, y, z, theta):
 
+        scene = PlanningScene()
+        scene.is_diff = True
+
+        leaf = CollisionObject()
+
+        leaf.id = leaf_id
+        leaf.header.frame_id = "world"
+
+        primitive = SolidPrimitive()
+        primitive.type = SolidPrimitive.BOX
+
+        # same leaf dimensions
+        primitive.dimensions = [0.06, 0.015, 0.005]
+
+        pose = PoseStamped()
+        pose.header.frame_id = "world"
+
+        pose.pose.position.x = x
+        pose.pose.position.y = y
+        pose.pose.position.z = z
+
+        yaw = theta + math.pi
+
+        q = self.euler_to_quaternion(0, 0, yaw)
+
+        pose.pose.orientation = q
+
+        leaf.primitives.append(primitive)
+        leaf.primitive_poses.append(pose.pose)
+
+        leaf.operation = CollisionObject.ADD
+
+        scene.world.collision_objects.append(leaf)
+
+        self.scene_pub.publish(scene)
+
+        self.get_logger().info(f"{leaf_id} collision enabled ✔")
+
+    # -------------------------------------------------
+    # ENABLE TARGET LEAF BY INDEX
+    # -------------------------------------------------
+    def enable_leaf_by_index(self, index):
+
+        GOLDEN_ANGLE = math.radians(137.5)
+
+        NUM_LEAVES = 24
+        TOTAL_HEIGHT = 1.35
+        LEAF_RADIUS = 0.055
+
+        START_ANGLE = math.pi
+
+        theta = START_ANGLE + index * GOLDEN_ANGLE
+
+        z = 0.20 + (index / NUM_LEAVES) * TOTAL_HEIGHT
+
+        x = 0.45 + LEAF_RADIUS * math.cos(theta)
+        y = -0.3 + LEAF_RADIUS * math.sin(theta)
+
+        self.enable_leaf_collision(
+            f"leaf_{index}",
+            x,
+            y,
+            z,
+            theta
+        )
     # -------------------------------------------------
     # ATTACH LEAF (KEY PART)
     # -------------------------------------------------
@@ -173,6 +263,28 @@ class MoveWithMoveIt(Node):
         scene_pub.publish(scene)
 
         self.get_logger().info(f"Leaf {leaf_id} attached ✔")
+
+    # -------------------------------------------------
+    # REMOVE SINGLE LEAF MARKER
+    # -------------------------------------------------
+    def remove_leaf_marker(self, index):
+
+        marker_array = MarkerArray()
+
+        marker = Marker()
+
+        marker.header.frame_id = "world"
+
+        marker.ns = "leaves"
+        marker.id = index
+
+        marker.action = Marker.DELETE
+
+        marker_array.markers.append(marker)
+
+        self.marker_pub.publish(marker_array)
+
+        self.get_logger().info(f"leaf_{index} visual removed ✔")
 
     # -------------------------------------------------
     # GRIPPER
@@ -286,9 +398,24 @@ class MoveWithMoveIt(Node):
     # RUN PICK PIPELINE
     # -------------------------------------------------
     def run(self):
+        # target leaf
+        target_leaf = 1
+
+        # remove visual marker
+        self.remove_leaf_marker(target_leaf)
+
+        # enable collision version
+        self.enable_leaf_by_index(target_leaf)
+
+        # enable collision for target leaf
+        self.enable_leaf_by_index(1)
 
         p2 = [0.572, -0.222, 1.776, 0.026, 0.536, 0.0]
+        
         leaf_pose = [0.817, -0.230, 1.362, 0.441, 0.275, 0.0]
+
+        r2 = [0.817, -0.215, 1.362, 0.441, 0.275, 0.0]
+
         home = [0, 0, 0, 0, 0, 0]
 
         sequence = [
@@ -302,9 +429,11 @@ class MoveWithMoveIt(Node):
 
             ("ATTACH", "leaf_1"),
 
+            ("R2", r2),
+
             ("TWIST_TEST", leaf_pose),
 
-            ("LIFT", p2),
+            #("LIFT", p2),
 
             ("HOME", home),
         ]
@@ -357,6 +486,7 @@ def main(args=None):
     rclpy.init(args=args)
     node = MoveWithMoveIt()
     node.run()
+    rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()
 

@@ -8,6 +8,8 @@ Panels:
         - /MotionPlanning1/Scene Robot1
         - /MotionPlanning1/Planning Request1
         - /MotionPlanning1/Planned Path1
+        - /MarkerArray1
+        - /MarkerArray1/Topic1
       Splitter Ratio: 0.5
     Tree Height: 144
   - Class: rviz_common/Help
@@ -74,6 +76,16 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          gripper_base_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          left_finger:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           link1:
             Alpha: 1
             Show Axes: false
@@ -95,6 +107,11 @@ Visualization Manager:
             Show Trail: false
             Value: true
           link5:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          right_finger:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -159,6 +176,16 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          gripper_base_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          left_finger:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           link1:
             Alpha: 1
             Show Axes: false
@@ -184,6 +211,11 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          right_finger:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           tool0:
             Alpha: 1
             Show Axes: false
@@ -198,6 +230,18 @@ Visualization Manager:
         Show Robot Visual: true
       Value: true
       Velocity_Scaling_Factor: 0.1
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: MarkerArray
+      Namespaces:
+        leaves: true
+      Topic:
+        Depth: 5
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /visualization_marker_array
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -216,7 +260,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 5.531154632568359
+      Distance: 3.38045334815979
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -231,10 +275,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5299999713897705
+      Pitch: 0.4450000524520874
       Target Frame: world
       Value: Orbit (rviz_default_plugins)
-      Yaw: 4.860182762145996
+      Yaw: 5.020186901092529
     Saved: ~
 Window Geometry:
   Displays:
